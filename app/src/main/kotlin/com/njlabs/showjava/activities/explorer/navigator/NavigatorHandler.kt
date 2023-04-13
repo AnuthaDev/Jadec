@@ -19,7 +19,8 @@
 package com.njlabs.showjava.activities.explorer.navigator
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.utils.ZipUtils
 import io.reactivex.Observable
@@ -88,7 +89,7 @@ class NavigatorHandler(private var context: Context) {
                     FileUtils.deleteDirectory(sourceDirectory)
                 }
             } catch (e: IOException) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }

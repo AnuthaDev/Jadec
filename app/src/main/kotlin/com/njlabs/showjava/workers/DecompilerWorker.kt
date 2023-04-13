@@ -23,7 +23,7 @@ import androidx.work.Data
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
@@ -90,12 +90,13 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
         val notifier = ProcessNotifier(context, id)
             .withPackageInfo(packageName, packageLabel, inputPackageFile)
 
-        Crashlytics.setString("decompilation_step", step)
-        Crashlytics.setString("decompilation_decompiler", decompiler)
-        Crashlytics.setString("decompilation_package_name", packageName)
-        Crashlytics.setString("decompilation_package_label", packageLabel)
-        Crashlytics.setInt("decompilation_chunk_size", chunkSize)
-        Crashlytics.setInt("decompilation_memory_threshold", memoryThreshold)
+        var crashlyticsInst = FirebaseCrashlytics.getInstance()
+        crashlyticsInst.setCustomKey("decompilation_step", step)
+        crashlyticsInst.setCustomKey("decompilation_decompiler", decompiler)
+        crashlyticsInst.setCustomKey("decompilation_package_name", packageName)
+        crashlyticsInst.setCustomKey("decompilation_package_label", packageLabel)
+        crashlyticsInst.setCustomKey("decompilation_chunk_size", chunkSize)
+        crashlyticsInst.setCustomKey("decompilation_memory_threshold", memoryThreshold)
 
         var outputData = Data.Builder().build()
 
@@ -143,12 +144,12 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
             }
         }
 
-        Crashlytics.setString("decompilation_step", "")
-        Crashlytics.setString("decompilation_decompiler", "")
-        Crashlytics.setString("decompilation_package_name", "")
-        Crashlytics.setString("decompilation_package_label", "")
-        Crashlytics.setInt("decompilation_chunk_size", -1)
-        Crashlytics.setInt("decompilation_memory_threshold", -1)
+        crashlyticsInst.setCustomKey("decompilation_step", "")
+        crashlyticsInst.setCustomKey("decompilation_decompiler", "")
+        crashlyticsInst.setCustomKey("decompilation_package_name", "")
+        crashlyticsInst.setCustomKey("decompilation_package_label", "")
+        crashlyticsInst.setCustomKey("decompilation_chunk_size", -1)
+        crashlyticsInst.setCustomKey("decompilation_memory_threshold", -1)
 
         return result
     }

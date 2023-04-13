@@ -19,7 +19,8 @@
 package com.njlabs.showjava.utils.logging
 
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+
 import timber.log.Timber
 
 /**
@@ -34,14 +35,14 @@ class ProductionTree : Timber.Tree() {
 
         if (t !== null && t !is OutOfMemoryError && t !is StackOverflowError && t !is NoClassDefFoundError) {
             if (message.isNotEmpty()) {
-                Crashlytics.log("[$tag] $message")
+                FirebaseCrashlytics.getInstance().log("[$tag] $message")
             }
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             return
         }
 
         if (priority > Log.WARN) {
-            Crashlytics.logException(Throwable("[$tag] $message"))
+            FirebaseCrashlytics.getInstance().recordException(Throwable("[$tag] $message"))
         }
     }
 }

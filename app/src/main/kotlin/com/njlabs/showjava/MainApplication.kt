@@ -33,9 +33,8 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import com.crashlytics.android.Crashlytics
-import com.google.firebase.iid.FirebaseInstanceId
-import io.fabric.sdk.android.Fabric
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.installations.FirebaseInstallations
 
 
 class MainApplication : MultiDexApplication() {
@@ -45,12 +44,13 @@ class MainApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        instanceId = FirebaseInstanceId.getInstance().id
+//        instanceId = FirebaseInstanceId.getInstance().id
+        instanceId = FirebaseInstallations.getInstance().id.toString()
 
         PreferenceManager.setDefaultValues(
             applicationContext,
             UserPreferences.NAME,
-            Context.MODE_PRIVATE,
+            MODE_PRIVATE,
             R.xml.preferences,
             false
         )
@@ -59,7 +59,7 @@ class MainApplication : MultiDexApplication() {
             UserPreferences(
                 applicationContext.getSharedPreferences(
                     UserPreferences.NAME,
-                    Context.MODE_PRIVATE
+                    MODE_PRIVATE
                 )
             )
 
@@ -71,8 +71,10 @@ class MainApplication : MultiDexApplication() {
         )
 
         Ads(this).init()
-        Fabric.with(this, Crashlytics())
-        Crashlytics.setUserIdentifier(instanceId)
+//        Fabric.with(this, Crashlytics())
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+//        Crashlytics.setUserIdentifier(instanceId)
+        FirebaseCrashlytics.getInstance().setUserId(instanceId)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -98,7 +100,7 @@ class MainApplication : MultiDexApplication() {
     fun cleanStaleNotifications(): Observable<Unit> {
         return Observable.fromCallable {
             val manager = applicationContext
-                .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                .getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             val workManager = WorkManager.getInstance()
             manager.activeNotifications.forEach { notification ->
                 val status = workManager.getWorkInfosForUniqueWorkLiveData(notification.tag)
