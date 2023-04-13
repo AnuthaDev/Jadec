@@ -142,7 +142,7 @@ class DecompilerActivity : BaseActivity() {
     private fun loadPackageInfoFromIntent() {
         if (intent.dataString.isNullOrEmpty()) {
             if (intent.hasExtra("packageInfo")) {
-                packageInfo = intent.getParcelableExtra("packageInfo")
+                packageInfo = intent.getParcelableExtra("packageInfo")!!
             } else {
                 Toast.makeText(context, R.string.errorLoadingInputFile, Toast.LENGTH_SHORT).show()
                 finish()

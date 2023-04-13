@@ -58,8 +58,7 @@ try {
 }
 
 android {
-    compileSdkVersion 28
-
+    compileSdkVersion 33
     dexOptions {
         preDexLibraries = preDexEnabled && !isCi
     }

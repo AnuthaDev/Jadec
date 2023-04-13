@@ -72,8 +72,8 @@ fun checkDataConnection(context: Context): Boolean {
     val connectivityMgr =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return (connectivityMgr.activeNetworkInfo != null &&
-            connectivityMgr.activeNetworkInfo.isAvailable &&
-            connectivityMgr.activeNetworkInfo.isConnected)
+            connectivityMgr.activeNetworkInfo!!.isAvailable &&
+            connectivityMgr.activeNetworkInfo!!.isConnected)
 }
 
 /**

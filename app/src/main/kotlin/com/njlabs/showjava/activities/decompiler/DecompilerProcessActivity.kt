@@ -63,7 +63,7 @@ class DecompilerProcessActivity : BaseActivity() {
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler_process)
-        packageInfo = intent.getParcelableExtra("packageInfo")
+        packageInfo = intent.getParcelableExtra("packageInfo")!!
         showMemoryUsage = userPreferences.showMemoryUsage
 
         memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
@@ -200,12 +200,12 @@ class DecompilerProcessActivity : BaseActivity() {
                     return
                 }
                 try {
-                    val percentage = message.toDouble()
+                    val percentage = message?.toDouble()
                     memoryStatus.text = "$message%"
                     val textColor = ContextCompat.getColor(
                         context,
                         when {
-                            percentage < 40 -> R.color.green_500
+                            percentage!! < 40 -> R.color.green_500
                             percentage < 60 -> R.color.amber_500
                             percentage < 80 -> R.color.orange_500
                             else -> R.color.red_500

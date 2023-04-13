@@ -49,7 +49,7 @@ class LowMemoryActivity : BaseActivity() {
                 "maxAttempts" to userPreferences.maxAttempts,
                 "chunkSize" to userPreferences.chunkSize,
                 "memoryThreshold" to userPreferences.memoryThreshold,
-                "label" to packageInfo.label,
+                "label" to packageInfo!!.label,
                 "name" to packageInfo.name,
                 "type" to packageInfo.type.name,
                 "decompiler" to decompiler
