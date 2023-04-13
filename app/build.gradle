@@ -24,6 +24,8 @@ apply plugin: "io.fabric"
 apply plugin: "com.google.android.gms.oss-licenses-plugin"
 apply plugin: "io.michaelrocks.paranoid"
 apply plugin: "ru.tinkoff.gradle.jarjar"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 def versionMajor = 3
 def versionMinor = 0
@@ -145,6 +147,7 @@ android {
             buildConfigField "Boolean", "EXTENDED_VALIDATION", "true"
         }
         debug {
+            ext.enableCrashlytics = false
             buildConfigField "Boolean", "EXTENDED_VALIDATION", props.getProperty("debugExtendedValidation", "false")
             minifyEnabled props.getProperty("minifyEnabled", "true") == "true"
             shrinkResources props.getProperty("shrinkResources", "true") == "true"
