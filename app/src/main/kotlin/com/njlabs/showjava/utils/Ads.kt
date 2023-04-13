@@ -25,6 +25,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import com.google.ads.consent.*
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.InitializationStatus
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import timber.log.Timber
@@ -44,7 +46,8 @@ class Ads(val context: Context) {
 
     @SuppressLint("ApplySharedPref")
     fun init() {
-        MobileAds.initialize(context, context.getString(R.string.admobAppId))
+        MobileAds.initialize(context,
+            OnInitializationCompleteListener { initializationStatus: InitializationStatus? -> })
         val publisherIds = arrayOf(context.getString(R.string.admobPublisherId))
         consentInformation.requestConsentInfoUpdate(
             publisherIds,

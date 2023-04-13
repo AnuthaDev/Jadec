@@ -136,7 +136,7 @@ class PurchaseUtils(
                         if (secureUtils.isPurchaseValid(purchase, it)) {
                             if (!secureUtils.hasPurchasedPro()) {
                                 activityContext.firebaseAnalytics.logEvent(
-                                    FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, null
+                                    FirebaseAnalytics.Event.PURCHASE, null
                                 )
                                 Toast.makeText(
                                     activityContext,

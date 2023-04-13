@@ -97,7 +97,7 @@ class PurchaseActivity : BaseActivity() {
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null)
         purchaseUtils.checkout.whenReady(object : Checkout.EmptyListener() {
             override fun onReady(requests: BillingRequests) {
-                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.CHECKOUT_PROGRESS, null)
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null)
                 requests.purchase(
                     ProductTypes.IN_APP,
                     secureUtils.iapProductId,

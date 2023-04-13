@@ -69,6 +69,7 @@
         <activity
             android:name=".activities.landing.LandingActivity"
             android:label="@string/appName"
+            android:exported="true"
             android:theme="@style/AppTheme.WithDrawer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -146,6 +147,7 @@
         <activity
             android:name=".activities.decompiler.DecompilerActivity"
             android:label="@string/appName"
+            android:exported="true"
             android:theme="@style/AppTheme.WithTransition">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

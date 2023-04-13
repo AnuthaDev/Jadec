@@ -37,6 +37,7 @@ import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.MainApplication
@@ -159,12 +160,12 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
                 val adRequest = AdRequest.Builder()
                     .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice(getString(R.string.adUnitId))
+                    //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                   // .addTestDevice(getString(R.string.adUnitId))
                     .build()
 
                 it.adListener = object : AdListener() {
-                    override fun onAdFailedToLoad(errorCode: Int) {
+                    override fun onAdFailedToLoad(errorCode: LoadAdError) {
                         super.onAdFailedToLoad(errorCode)
                         it.visibility = View.GONE
                     }
