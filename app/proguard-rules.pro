@@ -11,7 +11,7 @@
 -libraryjars libs/dex-translator-0.0.9.15.jar
 -libraryjars libs/dx-1.16.jar
 -libraryjars libs/jadx-core-0.9.0.jar
--libraryjars libs/smali-2.2.1.jar
+#-libraryjars libs/smali-2.2.1.jar
 
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
 -allowaccessmodification

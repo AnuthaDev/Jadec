@@ -172,22 +172,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Firebase-related dependencies
-    implementation("com.google.firebase:firebase-core:21.1.1", {
-        exclude group: "com.google.guava", module: "listenablefuture"
-    })
-    implementation('com.google.firebase:firebase-ads:22.0.0', {
-        exclude group: "com.google.guava", module: "listenablefuture"
-    })
-    implementation('com.google.firebase:firebase-crashlytics:18.3.6', {
-        exclude group: "com.google.guava", module: "listenablefuture"
-    })
-    implementation('com.google.firebase:firebase-analytics:21.2.1', {
-        exclude group: "com.google.guava", module: "listenablefuture"
-    })
+    implementation "com.google.firebase:firebase-core:21.1.1"
+    implementation 'com.google.firebase:firebase-ads:22.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.6'
+    implementation 'com.google.firebase:firebase-analytics:21.2.1'
 
     // AndroidX support libraries
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "com.google.android.material:material:1.1.0"
+    implementation "com.google.android.material:material:1.8.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.0.0"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
@@ -207,7 +199,7 @@ dependencies {
 
     // Dex2Jar & friends
     implementation "asm:asm-all:3.3.1"
-    implementation files("libs/smali-2.2.1.jar")
+    implementation 'org.smali:dexlib2:2.5.2'
     implementation files("libs/dex-ir-1.12.jar")
     implementation files("libs/dex-reader-1.15.jar")
     implementation files("libs/dex-tools-0.0.9.15.jar")
