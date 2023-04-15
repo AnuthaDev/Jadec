@@ -43,7 +43,7 @@ import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
-import com.njlabs.showjava.utils.ktx.sourceDir
+//import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -164,7 +164,7 @@ class DecompilerActivity : BaseActivity() {
     }
 
     private fun assertSourceExistence(addListener: Boolean = false) {
-        val sourceInfo = SourceInfo.from(sourceDir(packageInfo.name))
+        val sourceInfo = SourceInfo.from(this.getExternalFilesDir(null)!!.resolve("show-java" + packageInfo.name))
         if (addListener) {
             historyCard.setOnClickListener {
                 val intent = Intent(context, NavigatorActivity::class.java)

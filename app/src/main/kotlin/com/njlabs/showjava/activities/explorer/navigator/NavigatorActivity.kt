@@ -73,7 +73,9 @@ class NavigatorActivity : BaseActivity() {
             }
         }
         supportActionBar?.title = selectedApp?.packageLabel
-        currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
+        currentDirectory = currentDirectory ?: this.getExternalFilesDir(null)!!.resolve("show-java").resolve(
+            selectedApp?.sourceDirectory!!
+        )
         setupList()
         filesListAdapter.updateData(fileItems)
         currentDirectory?.let { populateList(it) }
@@ -96,7 +98,7 @@ class NavigatorActivity : BaseActivity() {
         } else {
             setSubtitle(
                 startDirectory.canonicalPath.replace(
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+                    "${this.getExternalFilesDir(null)}/show-java/sources/$packageName/",
                     ""
                 )
             )
@@ -228,7 +230,9 @@ class NavigatorActivity : BaseActivity() {
      * Check if the current folder the user is in, is the root
      */
     private fun isAtRoot(): Boolean {
-        return currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath
+        return currentDirectory?.canonicalPath == this.getExternalFilesDir(null)!!.resolve("show-java").resolve(
+            selectedApp?.sourceDirectory!!
+        ).canonicalPath
     }
 
     private fun shareArchive(file: File?) {

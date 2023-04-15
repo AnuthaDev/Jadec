@@ -26,7 +26,7 @@ import java.io.File
 /**
  * Path to the priamry storage directory on the user's internal memory
  */
-val appStorage: File = File(Environment.getExternalStorageDirectory(), "show-java")
+//val appStorage: File = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "show-java")
 
 /**
  * Check if the given packageInfo points to a system application
@@ -38,9 +38,9 @@ fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
 /**
  * Get the source directory for a given package name
  */
-fun sourceDir(packageName: String): File {
-    return appStorage.resolve("sources/$packageName")
-}
+//fun sourceDir(packageName: String): File {
+//    return appStorage.resolve("sources/$packageName")
+//}
 
 /**
  * Convert an arbitrary file name into a generated package name that we can use

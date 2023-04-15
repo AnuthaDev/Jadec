@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.activities.landing.adapters
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Environment
@@ -25,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
+import com.njlabs.showjava.activities.landing.LandingActivity
 import com.njlabs.showjava.data.SourceInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
@@ -34,15 +36,17 @@ class HistoryListAdapter(
     private val itemClick: (SourceInfo) -> Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
+
     class ViewHolder(view: View, private val itemClick: (SourceInfo) -> Unit) :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+
 
         fun bindSourceInfo(sourceInfo: SourceInfo) {
             with(sourceInfo) {
                 itemView.itemLabel.text = sourceInfo.packageLabel
                 itemView.itemSecondaryLabel.text = sourceInfo.packageName
                 val iconPath =
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/${sourceInfo.packageName}/icon.png"
+                    "${itemView.context.getExternalFilesDir(null)}/show-java/sources/${sourceInfo.packageName}/icon.png"
                 if (File(iconPath).exists()) {
                     val iconBitmap = BitmapFactory.decodeFile(iconPath)
                     itemView.itemIcon.setImageDrawable(

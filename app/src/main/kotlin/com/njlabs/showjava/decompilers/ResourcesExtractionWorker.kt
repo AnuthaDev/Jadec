@@ -248,12 +248,12 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
             sourceInfo
                 .setXmlSourcePresence(true)
-                .persist()
+                .persist(context)
         }
 
         sourceInfo
             .setSourceSize(FileUtils.sizeOfDirectory(workingDirectory))
-            .persist()
+            .persist(context)
 
         onCompleted()
 

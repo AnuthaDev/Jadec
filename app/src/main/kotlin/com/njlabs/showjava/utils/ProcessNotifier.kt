@@ -36,7 +36,7 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
-import com.njlabs.showjava.utils.ktx.sourceDir
+//import com.njlabs.showjava.utils.ktx.sourceDir
 import java.io.File
 
 
@@ -78,7 +78,11 @@ class ProcessNotifier(
         stopIntent.putExtra("id", packageName)
         stopIntent.putExtra("packageFilePath", packageFile.canonicalFile)
         stopIntent.putExtra("packageName", packageName)
-        val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntentForStop = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 
         val viewIntent = Intent(context, DecompilerProcessActivity::class.java)
         viewIntent.putExtra("packageInfo", PackageInfo(packageLabel, packageName))
@@ -89,7 +93,7 @@ class ProcessNotifier(
             context,
             0,
             viewIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -174,7 +178,7 @@ class ProcessNotifier(
             context,
             0,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -226,9 +230,7 @@ class ProcessNotifier(
     fun success() {
         val intent = Intent(context, NavigatorActivity::class.java)
         intent.putExtra("selectedApp", SourceInfo.from(
-            sourceDir(
-                packageName
-            )
+            context.getExternalFilesDir(null)!!.resolve("show-java/sources").resolve(packageName)
         ))
         complete(
             intent,

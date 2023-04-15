@@ -21,7 +21,7 @@ package com.njlabs.showjava.activities.landing
 import android.content.Context
 import androidx.work.WorkManager
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.ktx.appStorage
+//import com.njlabs.showjava.utils.ktx.appStorage
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
@@ -38,6 +38,7 @@ class LandingHandler(private var context: Context) {
 
     fun loadHistory(): Observable<ArrayList<SourceInfo>> {
         return Observable.fromCallable {
+            val appStorage: File = context.getExternalFilesDir(null)!!.resolve("show-java")
             val historyItems = ArrayList<SourceInfo>()
             appStorage.mkdirs()
             val nomedia = File(appStorage, ".nomedia")

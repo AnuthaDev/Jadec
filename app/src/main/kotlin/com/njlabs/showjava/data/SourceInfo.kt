@@ -18,10 +18,11 @@
 
 package com.njlabs.showjava.data
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.njlabs.showjava.utils.ktx.getDate
-import com.njlabs.showjava.utils.ktx.sourceDir
+//import com.njlabs.showjava.utils.ktx.sourceDir
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
 import org.json.JSONObject
@@ -57,7 +58,7 @@ class SourceInfo() : Parcelable {
         createdAt = parcel.readString()!!
         updatedAt = parcel.readString()!!
         sourceSize = parcel.readLong()
-        sourceDirectory = sourceDir(packageName)
+        sourceDirectory = File("sources").resolve(packageName)
     }
 
     constructor(packageLabel: String, packageName: String, hasJavaSource: Boolean, hasXmlSource:Boolean, createdAt: String, updatedAt: String, sourceSize: Long) : this() {
@@ -68,7 +69,7 @@ class SourceInfo() : Parcelable {
         this.createdAt = createdAt
         this.updatedAt = updatedAt
         this.sourceSize = sourceSize
-        sourceDirectory = sourceDir(packageName)
+        sourceDirectory = File("sources").resolve(packageName)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -92,7 +93,7 @@ class SourceInfo() : Parcelable {
 
     fun setPackageName(packageName: String): SourceInfo {
         this.packageName = packageName
-        this.sourceDirectory = sourceDir(packageName)
+        this.sourceDirectory = File("sources").resolve(packageName)
         return this
     }
 
@@ -111,11 +112,11 @@ class SourceInfo() : Parcelable {
         return this
     }
 
-    fun persist(): SourceInfo {
+    fun persist(context: Context): SourceInfo {
         synchronized(this) {
             updatedAt = getDate()
             try {
-                val infoFile = getInfoFile(sourceDirectory)
+                val infoFile = getInfoFile(context.getExternalFilesDir(null)!!.resolve("show-java").resolve(sourceDirectory))
                 val json = JSONObject()
                 json.put("package_label", packageLabel)
                 json.put("package_name", packageName)

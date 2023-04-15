@@ -122,7 +122,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         val sourceInfo = SourceInfo.from(workingDirectory)
             .setPackageLabel(packageLabel)
             .setPackageName(packageName)
-            .persist()
+            .persist(context)
 
         try {
             when (decompiler) {
@@ -145,7 +145,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         sourceInfo
             .setJavaSourcePresence(true)
             .setSourceSize(FileUtils.sizeOfDirectory(workingDirectory))
-            .persist()
+            .persist(context)
 
         return successIf(!outputJavaSrcDirectory.list().isNullOrEmpty())
     }

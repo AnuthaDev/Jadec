@@ -19,7 +19,8 @@
 package com.njlabs.showjava.utils
 
 
-import com.njlabs.showjava.utils.ktx.appStorage
+//import com.njlabs.showjava.utils.ktx.appStorage
+import android.os.Environment
 import timber.log.Timber
 import java.io.*
 import java.util.zip.ZipEntry
@@ -32,7 +33,7 @@ import java.util.zip.ZipOutputStream
 object ZipUtils {
 
     fun zipDir(dir: File, packageId: String): File {
-        val zipIntoDir = appStorage.resolve("archives")
+        val zipIntoDir = Environment.getExternalStorageDirectory().resolve("archives")
         if (!zipIntoDir.exists() || !zipIntoDir.isDirectory) {
             zipIntoDir.mkdirs()
         }

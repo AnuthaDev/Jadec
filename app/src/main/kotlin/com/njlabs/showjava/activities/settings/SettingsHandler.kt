@@ -19,7 +19,7 @@
 package com.njlabs.showjava.activities.settings
 
 import android.content.Context
-import com.njlabs.showjava.utils.ktx.appStorage
+//import com.njlabs.showjava.utils.ktx.appStorage
 import io.reactivex.Observable
 
 class SettingsHandler(private var context: Context) {
@@ -29,7 +29,7 @@ class SettingsHandler(private var context: Context) {
      */
     fun deleteHistory(): Observable<Any> {
         return Observable.fromCallable {
-            appStorage.resolve("sources")
+            context.getExternalFilesDir(null)!!.resolve("show-java").resolve("sources")
                 .deleteRecursively()
         }
     }

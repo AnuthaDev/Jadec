@@ -63,7 +63,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
         supportActionBar?.title = file.name
         val subtitle = file.canonicalPath.replace(
-            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+            "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/show-java/sources/$packageName/",
             ""
         )
 
