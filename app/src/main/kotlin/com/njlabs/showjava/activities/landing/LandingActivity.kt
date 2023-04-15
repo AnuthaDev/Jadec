@@ -132,9 +132,9 @@ class LandingActivity : BaseActivity() {
 
     public override fun onResume() {
         super.onResume()
-        if (hasValidPermissions()) {
+       // if (hasValidPermissions()) {
             populateHistory(true)
-        }
+      //  }
         if (isPro()) {
             supportActionBar?.title = "${getString(R.string.appName)} Pro"
             findViewById<AdView>(R.id.adView)?.visibility = View.GONE

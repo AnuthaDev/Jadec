@@ -65,7 +65,7 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 33
         multiDexEnabled true
         multiDexKeepProguard file("multidex-config.pro")
 
@@ -80,7 +80,7 @@ android {
 
         proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 
-        resValue "string", "appName", "Show Java"
+        resValue "string", "appName", "Jadec"
         resValue "string", "appNameGetPro", "Get Show Java Pro"
         resValue "string", "appVersion", android.defaultConfig.versionName
         resValue "string", "appVersionExtended", "Version ${android.defaultConfig.versionName}"

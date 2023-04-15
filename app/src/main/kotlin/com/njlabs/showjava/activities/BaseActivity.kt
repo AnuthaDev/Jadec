@@ -257,7 +257,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                     R.string.storagePermissionRationale,
                     Toast.LENGTH_LONG
                 ).show()
-                finish()
+                //finish()
             } else {
                 postPermissionsGrant()
             }

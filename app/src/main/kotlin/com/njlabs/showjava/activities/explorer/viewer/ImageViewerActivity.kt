@@ -56,7 +56,7 @@ class ImageViewerActivity : BaseActivity() {
             val subtitle = FilenameUtils
                 .getFullPath(filePath)
                 .replace(
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/show-java/sources/$packageName/",
                     ""
                 )
 
