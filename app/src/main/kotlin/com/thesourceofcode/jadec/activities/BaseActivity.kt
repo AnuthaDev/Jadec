@@ -39,6 +39,8 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.thesourceofcode.jadec.Constants
 import com.thesourceofcode.jadec.MainApplication
 import com.thesourceofcode.jadec.R
@@ -72,7 +74,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         super.onCreate(savedInstanceState)
         context = this
         inEea = ConsentInformation.getInstance(this).isRequestLocationInEeaOrUnknown
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        firebaseAnalytics = Firebase.analytics
         mainApplication = application as MainApplication
         firebaseAnalytics.setUserProperty("instance_id", mainApplication.instanceId)
 
