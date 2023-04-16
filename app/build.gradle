@@ -68,7 +68,7 @@ android {
         multiDexEnabled true
         multiDexKeepProguard file("multidex-config.pro")
 
-        applicationId "com.njlabs.showjava"
+        applicationId "com.thesourceofcode.jadec"
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
@@ -159,7 +159,7 @@ android {
         viewBinding true
     }
 
-    namespace 'com.njlabs.showjava'
+    namespace 'com.thesourceofcode.jadec'
 }
 
 configurations.all {
@@ -292,7 +292,7 @@ hiBeaver {
             /*
              * JaDX does not log class-by-class progress updates.
              * So we patch the the method that saves the class at the bytecode level
-             * to invoke a log method at com.njlabs.showjava.Logger
+             * to invoke a log method at com.thesourceofcode.jadec.Logger
              *
              * Note: this needs to be tested and adjusted for every update of JaDX.
              */
@@ -309,7 +309,7 @@ hiBeaver {
                                     methodVisitor.visitVarInsn(Opcodes.ALOAD, 2)
                                     methodVisitor.visitMethodInsn(
                                             Opcodes.INVOKESTATIC,
-                                            className2Path("com.njlabs.showjava.utils.streams.Logger"),
+                                            className2Path("com.thesourceofcode.jadec.utils.streams.Logger"),
                                             "logJadxClassWrite",
                                             "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V",
                                             false

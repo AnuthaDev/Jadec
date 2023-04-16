@@ -57,8 +57,8 @@
 -keep class com.android.dex.** { *; }
 -keep class xyz.codezero.android.dex.** { *; }
 -keep class kotlin.** { *; }
--keep class com.njlabs.showjava.MainApplication { *; }
--keep class com.njlabs.showjava.decompilers.** { *; }
+-keep class com.thesourceofcode.jadec.MainApplication { *; }
+-keep class com.thesourceofcode.jadec.decompilers.** { *; }
 -keep class jadx.core.clsp.** { *; }
 
 -keepattributes SourceFile,LineNumberTable
@@ -69,7 +69,7 @@
 -dontwarn com.android.**
 -dontwarn antlr.debug.**
 -dontwarn org.antlr.**
--dontwarn com.njlabs.showjava.**
+-dontwarn com.thesourceofcode.jadec.**
 -dontwarn rx.internal.**
 -dontwarn com.googlecode.dex2jar.**
 -dontwarn android.test.**

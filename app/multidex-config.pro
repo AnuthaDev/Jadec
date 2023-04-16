@@ -1,7 +1,7 @@
--keep class com.njlabs.MainApplication
--keep class com.njlabs.MainApplication { *; }
--keep class com.njlabs.showjava.utils.logging.** { *; }
--keep class com.njlabs.showjava.test.** { *; }
+-keep class com.thesourceofcode.MainApplication
+-keep class com.thesourceofcode.MainApplication { *; }
+-keep class com.thesourceofcode.jadec.utils.logging.** { *; }
+-keep class com.thesourceofcode.jadec.test.** { *; }
 -keep class androidx.test.** { *; }
 -keep class androidx.multidex.** { *; }
 -keep class kotlin.** { *; }

@@ -140,14 +140,14 @@
             android:title="@string/rateAndReview">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="market://details?id=com.njlabs.showjava"/>
+                android:data="market://details?id=com.thesourceofcode.jadec"/>
         </Preference>
         <Preference
             app:iconSpaceReserved="false"
             android:summary="@string/tapViewOpenSourceLicenses"
             android:title="@string/openSourceLicense">
             <intent
-                android:targetPackage="com.njlabs.showjava"
+                android:targetPackage="com.thesourceofcode.jadec"
                 android:targetClass="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"/>
         </Preference>
     </PreferenceCategory>

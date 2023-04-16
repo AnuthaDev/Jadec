@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="false"
-    tools:context="com.njlabs.showjava.activities.about.AboutActivity">
+    tools:context="com.thesourceofcode.jadec.activities.about.AboutActivity">
 
     <include
         android:id="@+id/toolbar"

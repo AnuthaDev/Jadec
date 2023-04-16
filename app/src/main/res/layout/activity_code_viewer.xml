@@ -26,14 +26,14 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
-    <com.njlabs.showjava.utils.views.CodeView
+    <com.thesourceofcode.jadec.utils.views.CodeView
         android:id="@+id/codeView"
         android:visibility="invisible"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/adView"
         android:layout_below="@+id/toolbar">
-    </com.njlabs.showjava.utils.views.CodeView>
+    </com.thesourceofcode.jadec.utils.views.CodeView>
 
     <ProgressBar
         android:id="@+id/codeLoadProgress"

@@ -20,11 +20,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <permission
-        android:name="com.njlabs.showjava.permission.CANCEL_WORKER"
+        android:name="com.thesourceofcode.jadec.permission.CANCEL_WORKER"
         android:protectionLevel="normal" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="com.njlabs.showjava.permission.CANCEL_WORKER" />
+    <uses-permission android:name="com.thesourceofcode.jadec.permission.CANCEL_WORKER" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -66,7 +66,7 @@
 
         <receiver
             android:name=".receivers.DecompilerActionReceiver"
-            android:permission="com.njlabs.showjava.permission.CANCEL_WORKER" />
+            android:permission="com.thesourceofcode.jadec.permission.CANCEL_WORKER" />
 
         <activity
             android:name=".activities.landing.LandingActivity"

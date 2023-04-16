@@ -19,7 +19,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
+    tools:context="com.thesourceofcode.jadec.activities.landing.LandingActivity">
 
     <group android:id="@+id/code_explorer_group"
         android:checkableBehavior="none">
