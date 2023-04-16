@@ -23,14 +23,14 @@ import android.widget.Toast
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import io.michaelrocks.paranoid.Obfuscate
+//import io.michaelrocks.paranoid.Obfuscate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.solovyev.android.checkout.*
 import timber.log.Timber
 
-@Obfuscate
+//@Obfuscate
 class PurchaseUtils(
     private val activityContext: BaseActivity,
     val secureUtils: SecureUtils,

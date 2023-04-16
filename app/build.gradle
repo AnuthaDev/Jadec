@@ -20,10 +20,10 @@
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
-apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: "com.google.firebase.crashlytics"
 apply plugin: "com.google.android.gms.oss-licenses-plugin"
-apply plugin: "io.michaelrocks.paranoid"
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: "io.michaelrocks.paranoid"
+apply plugin: "com.google.gms.google-services"
 apply plugin: "ru.tinkoff.gradle.jarjar"
 
 def versionMajor = 3
@@ -74,7 +74,7 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resConfigs 'en'
+        resourceConfigurations += ['en']
 
         vectorDrawables.useSupportLibrary true
 

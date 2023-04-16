@@ -32,7 +32,7 @@ import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.utils.RequestQueue
 import com.njlabs.showjava.utils.SingletonHolder
 import com.securepreferences.SecurePreferences
-import io.michaelrocks.paranoid.Obfuscate
+//import io.michaelrocks.paranoid.Obfuscate
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import org.json.JSONObject
@@ -42,7 +42,7 @@ import timber.log.Timber
 import java.security.MessageDigest
 
 
-@Obfuscate
+//@Obfuscate
 class SecureUtils(val context: Context) {
 
     private val packageName = "com.njlabs.showjava"
