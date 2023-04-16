@@ -38,9 +38,11 @@ import com.njlabs.showjava.activities.explorer.viewer.CodeViewerActivity
 import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.databinding.ActivityAboutBinding
+import com.njlabs.showjava.databinding.ActivityNavigatorBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_navigator.*
+//import kotlinx.android.synthetic.main.activity_navigator.*
 import timber.log.Timber
 import java.io.File
 
@@ -57,8 +59,12 @@ class NavigatorActivity : BaseActivity() {
     private var fileItems: ArrayList<FileItem> = ArrayList()
     private var selectedApp: SourceInfo? = null
 
+    private lateinit var binding: ActivityNavigatorBinding
+
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_navigator)
+        binding = ActivityNavigatorBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         selectedApp = intent.extras?.getParcelable("selectedApp")
         navigationHandler = NavigatorHandler(this)
 
@@ -78,14 +84,14 @@ class NavigatorActivity : BaseActivity() {
         filesListAdapter.updateData(fileItems)
         currentDirectory?.let { populateList(it) }
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             currentDirectory?.let { populateList(it) }
         }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
         val listGroupVisibility = if (isListVisible) View.VISIBLE else View.GONE
-        filesList.visibility = listGroupVisibility
+        binding.filesList.visibility = listGroupVisibility
     }
 
     private fun populateList(startDirectory: File) {
@@ -101,7 +107,7 @@ class NavigatorActivity : BaseActivity() {
                 )
             )
         }
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         disposables.add(navigationHandler.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -112,7 +118,7 @@ class NavigatorActivity : BaseActivity() {
             }
             .subscribe {
                 updateList(it)
-                swipeRefresh.isRefreshing = false
+                binding.swipeRefresh.isRefreshing = false
             }
         )
     }
@@ -131,8 +137,8 @@ class NavigatorActivity : BaseActivity() {
     }
 
     private fun setupList() {
-        filesList.setHasFixedSize(true)
-        filesList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        binding.filesList.setHasFixedSize(true)
+        binding.filesList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         filesListAdapter = FilesListAdapter(fileItems) { selectedFile ->
             if (selectedFile.file.isDirectory) {
                 populateList(selectedFile.file)
@@ -182,7 +188,7 @@ class NavigatorActivity : BaseActivity() {
                 }
             }
         }
-        filesList.adapter = filesListAdapter
+        binding.filesList.adapter = filesListAdapter
         updateList(fileItems)
     }
 
@@ -316,8 +322,8 @@ class NavigatorActivity : BaseActivity() {
 
     private fun deleteSource() {
         selectedApp?.let {
-            deleteProgress.visibility = View.VISIBLE
-            filesList.visibility = View.GONE
+            binding.deleteProgress.visibility = View.VISIBLE
+            binding.filesList.visibility = View.GONE
             disposables.add(navigationHandler.deleteDirectory(it.sourceDirectory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -333,6 +339,7 @@ class NavigatorActivity : BaseActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         goBack()
     }

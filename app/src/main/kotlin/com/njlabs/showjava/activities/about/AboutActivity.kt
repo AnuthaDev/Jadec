@@ -24,21 +24,26 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import kotlinx.android.synthetic.main.activity_about.*
+import com.njlabs.showjava.databinding.ActivityAboutBinding
 
 /**
  * Show information about the app, its version & licenses to all open source libraries used
  */
 class AboutActivity : BaseActivity() {
+
+    private lateinit var binding: ActivityAboutBinding
+
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_about)
+        binding = ActivityAboutBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         if (BuildConfig.GIT_SHA.isNotEmpty()) {
-            version.setText(R.string.appVersionExtendedWithHash)
+            binding.version.setText(R.string.appVersionExtendedWithHash)
         }
 
-        appInstanceId.text = getString(R.string.instanceId, mainApplication.instanceId)
+        binding.appInstanceId.text = getString(R.string.instanceId, mainApplication.instanceId)
 
-        viewOpenSourceLicenses.setOnClickListener {
+        binding.viewOpenSourceLicenses.setOnClickListener {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             startActivity(Intent(context, OssLicensesMenuActivity::class.java))
         }

@@ -26,7 +26,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.SourceInfo
-import kotlinx.android.synthetic.main.layout_app_list_item.view.*
+import com.njlabs.showjava.databinding.LayoutAppListItemBinding
+//import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
 
 class HistoryListAdapter(
@@ -34,28 +35,28 @@ class HistoryListAdapter(
     private val itemClick: (SourceInfo) -> Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, private val itemClick: (SourceInfo) -> Unit) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    class ViewHolder(private val itemBinding: LayoutAppListItemBinding, private val itemClick: (SourceInfo) -> Unit) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemBinding.root) {
 
         fun bindSourceInfo(sourceInfo: SourceInfo) {
             with(sourceInfo) {
-                itemView.itemLabel.text = sourceInfo.packageLabel
-                itemView.itemSecondaryLabel.text = sourceInfo.packageName
+                itemBinding.itemLabel.text = sourceInfo.packageLabel
+                itemBinding.itemSecondaryLabel.text = sourceInfo.packageName
                 val iconPath =
                     "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/show-java/sources/${sourceInfo.packageName}/icon.png"
                 if (File(iconPath).exists()) {
                     val iconBitmap = BitmapFactory.decodeFile(iconPath)
-                    itemView.itemIcon.setImageDrawable(
+                    itemBinding.itemIcon.setImageDrawable(
                         BitmapDrawable(
                             itemView.context.resources,
                             iconBitmap
                         )
                     )
                 } else {
-                    itemView.itemIcon.setImageResource(R.drawable.ic_list_generic)
+                    itemBinding.itemIcon.setImageResource(R.drawable.ic_list_generic)
                 }
-                itemView.itemCard.cardElevation = 1F
-                itemView.itemCard.setOnClickListener { itemClick(this) }
+                itemBinding.itemCard.cardElevation = 1F
+                itemBinding.itemCard.setOnClickListener { itemClick(this) }
             }
         }
     }
@@ -65,13 +66,11 @@ class HistoryListAdapter(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_app_list_item, parent, false)
-        return ViewHolder(view, itemClick)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+//        val view = LayoutInflater.from(parent.context)
+//            .inflate(R.layout.layout_app_list_item, parent, false)
+        val itemBinding = LayoutAppListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(itemBinding, itemClick)
     }
 
     override fun onBindViewHolder(holder: HistoryListAdapter.ViewHolder, position: Int) {

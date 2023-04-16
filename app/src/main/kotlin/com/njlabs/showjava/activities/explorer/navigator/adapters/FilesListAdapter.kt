@@ -23,7 +23,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.FileItem
-import kotlinx.android.synthetic.main.layout_app_list_item.view.*
+import com.njlabs.showjava.databinding.LayoutAppListItemBinding
+
+//import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 /**
  * List adapter for the code navigator
@@ -33,15 +35,15 @@ class FilesListAdapter(
     private val itemClick: (FileItem) -> Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<FilesListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, private val itemClick: (FileItem) -> Unit) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    class ViewHolder(private val itemBinding: LayoutAppListItemBinding, private val itemClick: (FileItem) -> Unit) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemBinding.root) {
         fun bindSourceInfo(fileItem: FileItem) {
             with(fileItem) {
-                itemView.itemLabel.text = fileItem.name
-                itemView.itemSecondaryLabel.text = fileItem.fileSize
-                itemView.itemIcon.setImageResource(fileItem.iconResource)
-                itemView.itemCard.cardElevation = 1F
-                itemView.itemCard.setOnClickListener { itemClick(this) }
+                itemBinding.itemLabel.text = fileItem.name
+                itemBinding.itemSecondaryLabel.text = fileItem.fileSize
+                itemBinding.itemIcon.setImageResource(fileItem.iconResource)
+                itemBinding.itemCard.cardElevation = 1F
+                itemBinding.itemCard.setOnClickListener { itemClick(this) }
             }
         }
     }
@@ -54,9 +56,10 @@ class FilesListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_app_list_item, parent, false)
-        return ViewHolder(view, itemClick)
+        val itemBinding = LayoutAppListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+//        val view = LayoutInflater.from(parent.context)
+//            .inflate(R.layout.layout_app_list_item, parent, false)
+        return ViewHolder(itemBinding, itemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

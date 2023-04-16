@@ -30,7 +30,7 @@ import android.widget.TextView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.data.PackageInfo
-import kotlinx.android.synthetic.main.activity_decompiler_process.*
+//import kotlinx.android.synthetic.main.activity_decompiler_process.*
 import android.content.IntentFilter
 import android.os.Build
 import android.view.View
@@ -43,6 +43,7 @@ import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.databinding.ActivityDecompilerProcessBinding
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
@@ -57,35 +58,39 @@ class DecompilerProcessActivity : BaseActivity() {
     )
 
     private lateinit var packageInfo: PackageInfo
+    private lateinit var binding: ActivityDecompilerProcessBinding
+
     private var hasCompleted = false
     private var showMemoryUsage = false
     private var ranOutOfMemory = false
 
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_decompiler_process)
+        binding = ActivityDecompilerProcessBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         packageInfo = intent.getParcelableExtra("packageInfo")!!
         showMemoryUsage = userPreferences.showMemoryUsage
 
-        memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
-        memoryStatus.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
+        binding.memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
+        binding.memoryStatus.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
 
         val decompilerIndex = intent.getIntExtra("decompilerIndex", 0)
 
-        inputPackageLabel.text = packageInfo.label
+        binding.inputPackageLabel.text = packageInfo.label
 
         val decompilers = resources.getStringArray(R.array.decompilers)
         val decompilerValues = resources.getStringArray(R.array.decompilersValues)
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
-        decompilerItemCard.findViewById<TextView>(R.id.decompilerName).text = decompilers[decompilerIndex]
-        decompilerItemCard.findViewById<TextView>(R.id.decompilerDescription).text = decompilerDescriptions[decompilerIndex]
+        binding.decompilerItemCard.decompilerName.text = decompilers[decompilerIndex]
+        binding.decompilerItemCard.decompilerDescription.text = decompilerDescriptions[decompilerIndex]
 
         setupGears()
 
         val statusIntentFilter = IntentFilter(Constants.WORKER.ACTION.BROADCAST + packageInfo.name)
         registerReceiver(progressReceiver, statusIntentFilter)
 
-        cancelButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             DecompilerWorker.cancel(context, packageInfo.name)
             finish()
         }
@@ -167,7 +172,7 @@ class DecompilerProcessActivity : BaseActivity() {
                     hasCompleted = true
                     finish()
                 }
-                isWaiting -> statusText.text = getString(R.string.waitingToStart)
+                isWaiting -> binding.statusText.text = getString(R.string.waitingToStart)
             }
         }
     }
@@ -186,8 +191,8 @@ class DecompilerProcessActivity : BaseActivity() {
     }
 
     private fun setupGears() {
-        leftProgressGear.post { leftProgressGear.animation = getGearAnimation(2, true) }
-        rightProgressGear.post { rightProgressGear.animation = getGearAnimation(1, false) }
+        binding.leftProgressGear.post { binding.leftProgressGear.animation = getGearAnimation(2, true) }
+        binding.rightProgressGear.post { binding.rightProgressGear.animation = getGearAnimation(1, false) }
     }
 
     private val progressReceiver = object : BroadcastReceiver() {
@@ -201,7 +206,7 @@ class DecompilerProcessActivity : BaseActivity() {
                 }
                 try {
                     val percentage = message?.toDouble()
-                    memoryStatus.text = "$message%"
+                    binding.memoryStatus.text = "$message%"
                     val textColor = ContextCompat.getColor(
                         context,
                         when {
@@ -211,19 +216,19 @@ class DecompilerProcessActivity : BaseActivity() {
                             else -> R.color.red_500
                         }
                     )
-                    memoryStatus.setTextColor(textColor)
-                    memoryUsage.setTextColor(textColor)
+                    binding.memoryStatus.setTextColor(textColor)
+                    binding.memoryUsage.setTextColor(textColor)
                 } catch (ignored: Exception) { }
                 return
             }
 
             intent.getStringExtra(Constants.WORKER.STATUS_TITLE)?.let {
                 if (it.trim().isNotEmpty()) {
-                    statusTitle.text = it
+                    binding.statusTitle.text = it
                 }
             }
             message?.let {
-                statusText.text = it
+                binding.statusText.text = it
             }
         }
     }

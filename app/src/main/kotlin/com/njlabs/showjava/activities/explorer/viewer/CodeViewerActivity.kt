@@ -28,11 +28,12 @@ import android.view.MenuItem
 import android.view.View
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.databinding.ActivityCodeViewerBinding
 import com.njlabs.showjava.utils.views.CodeView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_code_viewer.*
+//import kotlinx.android.synthetic.main.activity_code_viewer.*
 import java.io.File
 
 class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
@@ -51,9 +52,12 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
     private var showLineNumbers = true
     private var invertColors = true
 
+    private lateinit var binding: ActivityCodeViewerBinding
     override fun init(savedInstanceState: Bundle?) {
 
-        setupLayout(R.layout.activity_code_viewer)
+        binding = ActivityCodeViewerBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         val extras = intent.extras
 
         val file = File(extras?.getString("filePath"))
@@ -76,11 +80,11 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            codeView.visibility = View.INVISIBLE
-            codeLoadProgress.visibility = View.VISIBLE
+            binding.codeView.visibility = View.INVISIBLE
+            binding.codeLoadProgress.visibility = View.VISIBLE
         } else {
-            codeView.visibility = View.VISIBLE
-            codeLoadProgress.visibility = View.GONE
+            binding.codeView.visibility = View.VISIBLE
+            binding.codeLoadProgress.visibility = View.GONE
         }
 
         var language = file.extension
@@ -106,7 +110,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
                     it.localizedMessage
                 }
                 .subscribe { fileContent ->
-                    codeView.setCode(fileContent)
+                    binding.codeView.setCode(fileContent)
                         .setLanguage(language)
                         .setWrapLine(wrapLine)
                         .setDarkMode(invertColors)
@@ -130,15 +134,15 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
     override fun onStartCodeHighlight() {
         runOnUiThread {
-            codeView.visibility = View.INVISIBLE
-            codeLoadProgress.visibility = View.VISIBLE
+            binding.codeView.visibility = View.INVISIBLE
+            binding.codeLoadProgress.visibility = View.VISIBLE
         }
     }
 
     override fun onFinishCodeHighlight() {
         runOnUiThread {
-            codeView.visibility = View.VISIBLE
-            codeLoadProgress.visibility = View.GONE
+            binding.codeView.visibility = View.VISIBLE
+            binding.codeLoadProgress.visibility = View.GONE
         }
     }
 
@@ -164,28 +168,28 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             R.id.wrap_text -> {
                 val newState = !item.isChecked
                 codeViewPreferences.edit().putBoolean("wrapLine", newState).apply()
-                codeView.setWrapLine(newState).apply()
+                binding.codeView.setWrapLine(newState).apply()
                 item.isChecked = newState
                 return true
             }
             R.id.zoomable -> {
                 val newState = !item.isChecked
                 codeViewPreferences.edit().putBoolean("zoomable", newState).apply()
-                codeView.setZoomEnabled(newState)
+                binding.codeView.setZoomEnabled(newState)
                 item.isChecked = newState
                 return true
             }
             R.id.line_number -> {
                 val newState = !item.isChecked
                 codeViewPreferences.edit().putBoolean("showLineNumbers", newState).apply()
-                codeView.setShowLineNumber(newState).apply()
+                binding.codeView.setShowLineNumber(newState).apply()
                 item.isChecked = newState
                 return true
             }
             R.id.invert_colors -> {
                 invertColors = !invertColors
                 codeViewPreferences.edit().putBoolean("invertColors", invertColors).apply()
-                codeView.setDarkMode(invertColors).apply()
+                binding.codeView.setDarkMode(invertColors).apply()
                 return true
             }
         }

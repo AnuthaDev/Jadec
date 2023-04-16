@@ -19,7 +19,6 @@
 
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
-apply plugin: "kotlin-android-extensions"
 apply plugin: "com.google.firebase.crashlytics"
 apply plugin: "com.google.android.gms.oss-licenses-plugin"
 //apply plugin: "io.michaelrocks.paranoid"
@@ -105,8 +104,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     packagingOptions {
         resources {
@@ -155,6 +154,11 @@ android {
     lint {
         abortOnError false
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
     namespace 'com.njlabs.showjava'
 }
 
@@ -169,13 +173,13 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
 
     // Kotlin Standard library
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Firebase-related dependencies
     implementation "com.google.firebase:firebase-core:21.1.1"
     implementation 'com.google.firebase:firebase-ads:22.0.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.6'
-    implementation 'com.google.firebase:firebase-analytics:21.2.1'
+    implementation 'com.google.firebase:firebase-analytics:21.2.2'
 
     // AndroidX support libraries
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -343,5 +347,3 @@ hiBeaver {
             ]
     ]
 }
-
-apply plugin: "com.google.gms.google-services"

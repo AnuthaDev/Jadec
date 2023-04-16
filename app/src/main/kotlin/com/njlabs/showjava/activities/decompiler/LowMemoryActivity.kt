@@ -24,10 +24,11 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.data.PackageInfo
+import com.njlabs.showjava.databinding.ActivityLowMemoryBinding
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_low_memory.*
+//import kotlinx.android.synthetic.main.activity_low_memory.*
 import timber.log.Timber
 
 /**
@@ -36,13 +37,15 @@ import timber.log.Timber
  * be investigated later on to see what can be done to reduce the memory usage.
  */
 class LowMemoryActivity : BaseActivity() {
-
+    private lateinit var binding: ActivityLowMemoryBinding
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_low_memory)
+        binding = ActivityLowMemoryBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         val packageInfo = intent.getParcelableExtra<PackageInfo>("packageInfo")
         val decompiler = intent.getStringExtra("decompiler")
 
-        reportButton.setOnClickListener {
+        binding.reportButton.setOnClickListener {
 
             firebaseAnalytics.logEvent(Constants.EVENTS.REPORT_APP_LOW_MEMORY, mapOf(
                 "shouldIgnoreLibs" to userPreferences.ignoreLibraries,

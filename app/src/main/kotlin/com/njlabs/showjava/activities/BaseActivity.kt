@@ -102,7 +102,17 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         setupToolbar(null)
         setupGoogleAds()
     }
+    fun setupLayout(layoutRef: View) {
+        setContentView(layoutRef)
+        setupToolbar(null)
+        setupGoogleAds()
+    }
 
+    fun setupLayout(layoutRef: View, title: String) {
+        setContentView(layoutRef)
+        setupToolbar(title)
+        setupGoogleAds()
+    }
     fun setupLayout(layoutRef: Int, title: String) {
         setContentView(layoutRef)
         setupToolbar(title)
@@ -248,6 +258,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         return EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
+    @Deprecated("Deprecated in Java")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {

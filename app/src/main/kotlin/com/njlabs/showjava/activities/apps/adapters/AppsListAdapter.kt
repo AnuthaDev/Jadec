@@ -29,7 +29,9 @@ import androidx.core.content.res.ResourcesCompat
 import cn.nekocode.badge.BadgeDrawable
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
-import kotlinx.android.synthetic.main.layout_app_list_item.view.*
+import com.njlabs.showjava.databinding.LayoutAppListItemBinding
+
+//import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 
 fun getSystemBadge(context: Context): BadgeDrawable {
@@ -51,20 +53,20 @@ class AppsListAdapter(
 
     private lateinit var systemBadgeInstance: BadgeDrawable
 
-    inner class ViewHolder(private val view: View, private val itemClick: (PackageInfo, View) -> Unit) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(private val itemBinding: LayoutAppListItemBinding, private val itemClick: (PackageInfo, View) -> Unit) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemBinding.root) {
 
         private val systemBadge: BadgeDrawable
             get() {
                 if (!::systemBadgeInstance.isInitialized) {
-                    systemBadgeInstance = getSystemBadge(view.context)
+                    systemBadgeInstance = getSystemBadge(itemBinding.root.context)
                 }
                 return systemBadgeInstance
             }
 
         fun bindPackageInfo(packageInfo: PackageInfo) {
             with(packageInfo) {
-                itemView.itemLabel.text = if (packageInfo.isSystemPackage)
+                itemBinding.itemLabel.text = if (packageInfo.isSystemPackage)
                     SpannableString(
                         TextUtils.concat(
                             packageInfo.label,
@@ -75,18 +77,19 @@ class AppsListAdapter(
                 else
                     packageInfo.label
 
-                itemView.itemSecondaryLabel.text = packageInfo.version
-                itemView.itemIcon.setImageDrawable(packageInfo.icon)
-                itemView.itemCard.cardElevation = 1F
-                itemView.itemCard.setOnClickListener { itemClick(this, itemView) }
+                itemBinding.itemSecondaryLabel.text = packageInfo.version
+                itemBinding.itemIcon.setImageDrawable(packageInfo.icon)
+                itemBinding.itemCard.cardElevation = 1F
+                itemBinding.itemCard.setOnClickListener { itemClick(this, itemView) }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_app_list_item, parent, false)
-        return ViewHolder(view, itemClick)
+        val itemBinding = LayoutAppListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+//        val view = LayoutInflater.from(parent.context)
+//            .inflate(R.layout.layout_app_list_item, parent, false)
+        return ViewHolder(itemBinding, itemClick)
     }
 
     override fun onBindViewHolder(holder: AppsListAdapter.ViewHolder, position: Int) {

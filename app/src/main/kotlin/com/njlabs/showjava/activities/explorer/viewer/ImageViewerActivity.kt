@@ -28,16 +28,20 @@ import com.davemorrissey.labs.subscaleview.ImageViewState
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import kotlinx.android.synthetic.main.activity_image_viewer.*
+import com.njlabs.showjava.databinding.ActivityImageViewerBinding
+//import kotlinx.android.synthetic.main.activity_image_viewer.*
 import org.apache.commons.io.FilenameUtils
 
 
 class ImageViewerActivity : BaseActivity() {
+    private lateinit var binding: ActivityImageViewerBinding
     private var isBlack: Boolean = true
     private val bundleState = "ImageViewState"
 
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_image_viewer)
+        binding = ActivityImageViewerBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         window.decorView.setBackgroundColor(Color.BLACK)
         toolbar.popupTheme = R.style.AppTheme_DarkPopupOverlay
 
@@ -66,12 +70,12 @@ class ImageViewerActivity : BaseActivity() {
                 setSubtitle(subtitle)
             }
 
-            imageView.setImage(ImageSource.uri(filePath!!), imageViewState)
-            imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
-            imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER)
-            imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
-            imageView.setMinimumDpi(100)
-            imageView.setMaximumDpi(600)
+            binding.imageView.setImage(ImageSource.uri(filePath!!), imageViewState)
+            binding.imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
+            binding.imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER)
+            binding.imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
+            binding.imageView.setMinimumDpi(100)
+            binding.imageView.setMaximumDpi(600)
         }
 
     }
@@ -99,9 +103,9 @@ class ImageViewerActivity : BaseActivity() {
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val state = imageView.state
+        val state = binding.imageView.state
         if (state != null) {
-            outState.putSerializable(bundleState, imageView.state)
+            outState.putSerializable(bundleState, binding.imageView.state)
         }
     }
 }

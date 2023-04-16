@@ -41,6 +41,8 @@ import com.njlabs.showjava.activities.apps.adapters.getSystemBadge
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.databinding.ActivityDecompilerBinding
+import com.njlabs.showjava.databinding.LayoutPickDecompilerListItemBinding
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.ktx.sourceDir
@@ -48,9 +50,9 @@ import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_decompiler.*
-import kotlinx.android.synthetic.main.layout_app_list_item.view.*
-import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
+//import kotlinx.android.synthetic.main.activity_decompiler.*
+//import kotlinx.android.synthetic.main.layout_app_list_item.view.*
+//import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URI
@@ -60,9 +62,12 @@ class DecompilerActivity : BaseActivity() {
 
     private lateinit var packageInfo: PackageInfo
 
+    private lateinit var binding: ActivityDecompilerBinding
     @SuppressLint("SetTextI18n")
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_decompiler)
+        binding = ActivityDecompilerBinding.inflate(layoutInflater)
+        val viewroot = binding.root
+        setupLayout(viewroot)
 
         loadPackageInfoFromIntent()
 
@@ -74,7 +79,7 @@ class DecompilerActivity : BaseActivity() {
 
         val apkSize = FileUtils.byteCountToDisplaySize(packageInfo.file.length())
 
-        itemLabel.itemLabel.text = if (packageInfo.isSystemPackage)
+        binding.itemLabel.text = if (packageInfo.isSystemPackage)
             SpannableString(
                 TextUtils.concat(
                     packageInfo.label,
@@ -85,26 +90,28 @@ class DecompilerActivity : BaseActivity() {
         else
             packageInfo.label
 
-        itemSecondaryLabel.text = "${packageInfo.version} - $apkSize"
+        binding.itemSecondaryLabel.text = "${packageInfo.version} - $apkSize"
 
         val decompilersValues = resources.getStringArray(R.array.decompilersValues)
         val decompilers = resources.getStringArray(R.array.decompilers)
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
         decompilersValues.forEachIndexed { index, decompiler ->
-            val view = LayoutInflater.from(pickerList.context)
-                .inflate(R.layout.layout_pick_decompiler_list_item, pickerList, false)
-            view.decompilerName.text = decompilers[index]
-            view.decompilerDescription.text = decompilerDescriptions[index]
-            view.decompilerItemCard.cardElevation = 1F
-            view.decompilerItemCard.setOnClickListener {
+//            val view = LayoutInflater.from(binding.pickerList.context)
+//                .inflate(R.layout.layout_pick_decompiler_list_item, binding.pickerList, false)
+            val pickerbinding = LayoutPickDecompilerListItemBinding.inflate(layoutInflater)
+            val view = pickerbinding.root
+            pickerbinding.decompilerName.text = decompilers[index]
+            pickerbinding.decompilerDescription.text = decompilerDescriptions[index]
+            pickerbinding.decompilerItemCard.cardElevation = 1F
+            pickerbinding.decompilerItemCard.setOnClickListener {
                 startProcess(it, decompiler, index)
             }
-            pickerList.addView(view)
+            binding.pickerList.addView(view)
         }
 
         if (packageInfo.isSystemPackage) {
-            systemAppWarning.visibility = View.VISIBLE
+            binding.systemAppWarning.visibility = View.VISIBLE
             val warning = getString(R.string.systemAppWarning)
             val sb = SpannableStringBuilder(warning)
             val bss = StyleSpan(Typeface.BOLD)
@@ -113,11 +120,11 @@ class DecompilerActivity : BaseActivity() {
             sb.setSpan(bss, 0, 8, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             sb.setSpan(nss, 8, warning.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             sb.setSpan(iss, 0, warning.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            systemAppWarning.text = sb
+            binding.systemAppWarning.text = sb
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            decompilersUnavailableNotification.visibility = View.VISIBLE
+            binding.decompilersUnavailableNotification.visibility = View.VISIBLE
         }
 
         disposables.add(
@@ -133,7 +140,7 @@ class DecompilerActivity : BaseActivity() {
                         resources.getDrawable(R.drawable.ic_list_generic)
                     }
                 }
-                .subscribe { itemIcon.setImageDrawable(it) }
+                .subscribe { binding.itemIcon.setImageDrawable(it) }
         )
 
         assertSourceExistence(true)
@@ -166,17 +173,17 @@ class DecompilerActivity : BaseActivity() {
     private fun assertSourceExistence(addListener: Boolean = false) {
         val sourceInfo = SourceInfo.from(sourceDir(packageInfo.name))
         if (addListener) {
-            historyCard.setOnClickListener {
+            binding.historyCard.setOnClickListener {
                 val intent = Intent(context, NavigatorActivity::class.java)
                 intent.putExtra("selectedApp", sourceInfo)
                 startActivity(intent)
             }
         }
         if (sourceInfo.exists()) {
-            historyCard.visibility = View.VISIBLE
-            historyInfo.text = FileUtils.byteCountToDisplaySize(sourceInfo.sourceSize)
+            binding.historyCard.visibility = View.VISIBLE
+            binding.historyInfo.text = FileUtils.byteCountToDisplaySize(sourceInfo.sourceSize)
         } else {
-            historyCard.visibility = View.GONE
+            binding.historyCard.visibility = View.GONE
         }
     }
 

@@ -25,8 +25,10 @@ import android.widget.Toast
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.databinding.ActivityAboutBinding
+import com.njlabs.showjava.databinding.ActivityPurchaseBinding
 import com.njlabs.showjava.utils.secure.PurchaseUtils
-import kotlinx.android.synthetic.main.activity_purchase.*
+//import kotlinx.android.synthetic.main.activity_purchase.*
 import org.solovyev.android.checkout.*
 import timber.log.Timber
 
@@ -35,13 +37,17 @@ class PurchaseActivity : BaseActivity() {
 
     private lateinit var purchaseUtils: PurchaseUtils
 
+    private lateinit var binding: ActivityPurchaseBinding
+
     private fun isLoading(loading: Boolean) {
-        buttonProgressBar.visibility = if (!loading) View.GONE else View.VISIBLE
-        buyButton.visibility = if (loading) View.GONE else View.VISIBLE
+        binding.buttonProgressBar.visibility = if (!loading) View.GONE else View.VISIBLE
+        binding.buyButton.visibility = if (loading) View.GONE else View.VISIBLE
     }
 
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_purchase, getString(R.string.appNameGetPro))
+        binding = ActivityPurchaseBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view, getString(R.string.appNameGetPro))
         Timber.d("[pa] init")
 
         secureUtils.isSafeExtended(
@@ -55,7 +61,7 @@ class PurchaseActivity : BaseActivity() {
                         finish()
                     }
                     purchaseUtils.initializeCheckout(true)
-                    buyButton.setOnClickListener {
+                    binding.buyButton.setOnClickListener {
                         isLoading(true)
                         makePurchase()
                     }
@@ -64,7 +70,7 @@ class PurchaseActivity : BaseActivity() {
             { err, app ->// Do not allow
                 runOnUiThread {
                     isLoading(false)
-                    buyButton.visibility = View.GONE
+                    binding.buyButton.visibility = View.GONE
                     if (app != null) {
                         Toast.makeText(
                             context,
@@ -83,7 +89,7 @@ class PurchaseActivity : BaseActivity() {
             { // On Error
                 runOnUiThread {
                     isLoading(false)
-                    buyButton.visibility = View.GONE
+                    binding.buyButton.visibility = View.GONE
                     Toast.makeText(context, R.string.purchaseInitError, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -115,6 +121,7 @@ class PurchaseActivity : BaseActivity() {
         super.onDestroy()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (::purchaseUtils.isInitialized) {

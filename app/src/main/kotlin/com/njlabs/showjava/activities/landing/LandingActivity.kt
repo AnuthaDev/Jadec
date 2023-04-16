@@ -39,11 +39,12 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.databinding.ActivityLandingBinding
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_landing.*
+//import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 import java.io.File
 
@@ -55,28 +56,32 @@ class LandingActivity : BaseActivity() {
     private lateinit var filePickerDialog: FilePickerDialog
     private lateinit var purchaseUtils: PurchaseUtils
 
+    private lateinit var binding: ActivityLandingBinding
+
     private var historyListAdapter: HistoryListAdapter? = null
     private var historyItems = ArrayList<SourceInfo>()
 
     private var shouldLoadHistory = true
 
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_landing)
+        binding = ActivityLandingBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         drawerToggle = ActionBarDrawerToggle(
             this,
-            drawerLayout,
+            binding.drawerLayout,
             R.string.drawerOpen,
             R.string.drawerClose
         )
-        navigationView.setNavigationItemSelectedListener {
+        binding.navigationView.setNavigationItemSelectedListener {
             onOptionsItemSelected(it)
         }
 
         if (!isPro()) {
-            navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
+            binding.navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
         }
 
-        drawerLayout.addDrawerListener(drawerToggle)
+        binding.drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
         setupFab()
 
@@ -112,7 +117,7 @@ class LandingActivity : BaseActivity() {
             }
         }
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             populateHistory(true)
         }
 
@@ -121,7 +126,7 @@ class LandingActivity : BaseActivity() {
             if (isPro()) {
                 supportActionBar?.title = "${getString(R.string.appName)} Pro"
                 findViewById<AdView>(R.id.adView)?.visibility = View.GONE
-                navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
+                binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
             }
         }
         purchaseUtils.initializeCheckout(false, true)
@@ -138,12 +143,12 @@ class LandingActivity : BaseActivity() {
         if (isPro()) {
             supportActionBar?.title = "${getString(R.string.appName)} Pro"
             findViewById<AdView>(R.id.adView)?.visibility = View.GONE
-            navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
+            binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
         }
     }
 
     private fun setupFab() {
-        selectionFab.addOnMenuItemClickListener { _, _, itemId ->
+        binding.selectionFab.addOnMenuItemClickListener { _, _, itemId ->
             when (itemId) {
                 R.id.action_pick_installed -> {
                     startActivity(
@@ -168,7 +173,7 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun populateHistory(resume: Boolean = false) {
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         disposables.add(landingHandler.loadHistory()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -178,7 +183,7 @@ class LandingActivity : BaseActivity() {
             }
             .subscribe {
                 historyItems = it
-                swipeRefresh.isRefreshing = false
+                binding.swipeRefresh.isRefreshing = false
                 if (resume && historyListAdapter != null) {
                     historyListAdapter?.updateData(historyItems)
                     setListVisibility(!historyItems.isEmpty())
@@ -192,10 +197,10 @@ class LandingActivity : BaseActivity() {
     private fun setListVisibility(isListVisible: Boolean = true) {
         val listGroupVisibility = if (isListVisible) View.VISIBLE else View.GONE
         val defaultGroupVisibility = if (isListVisible) View.GONE else View.VISIBLE
-        historyListView.visibility = listGroupVisibility
-        swipeRefresh.visibility = listGroupVisibility
-        pickAppText.visibility = listGroupVisibility
-        welcomeLayout.visibility = defaultGroupVisibility
+        binding.historyListView.visibility = listGroupVisibility
+        binding.swipeRefresh.visibility = listGroupVisibility
+        binding.pickAppText.visibility = listGroupVisibility
+        binding.welcomeLayout.visibility = defaultGroupVisibility
     }
 
 
@@ -204,14 +209,14 @@ class LandingActivity : BaseActivity() {
             setListVisibility(false)
         } else {
             setListVisibility(true)
-            historyListView.setHasFixedSize(true)
-            historyListView.layoutManager = LinearLayoutManager(context)
+            binding.historyListView.setHasFixedSize(true)
+            binding.historyListView.layoutManager = LinearLayoutManager(context)
             historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
                 val intent = Intent(context, NavigatorActivity::class.java)
                 intent.putExtra("selectedApp", selectedHistoryItem)
                 startActivity(intent)
             }
-            historyListView.adapter = historyListAdapter
+            binding.historyListView.adapter = historyListAdapter
         }
     }
 

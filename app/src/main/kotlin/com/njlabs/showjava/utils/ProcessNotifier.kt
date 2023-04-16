@@ -78,7 +78,7 @@ class ProcessNotifier(
         stopIntent.putExtra("id", packageName)
         stopIntent.putExtra("packageFilePath", packageFile.canonicalFile)
         stopIntent.putExtra("packageName", packageName)
-        val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val viewIntent = Intent(context, DecompilerProcessActivity::class.java)
         viewIntent.putExtra("packageInfo", PackageInfo(packageLabel, packageName))
@@ -89,7 +89,7 @@ class ProcessNotifier(
             context,
             0,
             viewIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -174,7 +174,7 @@ class ProcessNotifier(
             context,
             0,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(

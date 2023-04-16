@@ -35,9 +35,10 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.data.PackageInfo
+import com.njlabs.showjava.databinding.ActivityAppsBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_apps.*
+//import kotlinx.android.synthetic.main.activity_apps.*
 import timber.log.Timber
 
 
@@ -51,14 +52,18 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     private var filteredApps = ArrayList<PackageInfo>()
     private var withSystemApps: Boolean = false
 
+    private lateinit var binding: ActivityAppsBinding
+
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_apps)
+        binding = ActivityAppsBinding.inflate(layoutInflater)
+        val view = binding.root
+        setupLayout(view)
         appsHandler = AppsHandler(context)
         withSystemApps = userPreferences.showSystemApps
 
-        loadingView.visibility = View.VISIBLE
-        appsList.visibility = View.GONE
-        typeRadioGroup.visibility = View.GONE
+        binding.loadingView.visibility = View.VISIBLE
+        binding.appsList.visibility = View.GONE
+        binding.typeRadioGroup.visibility = View.GONE
         searchMenuItem?.isVisible = false
 
         savedInstanceState?.let {
@@ -74,7 +79,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         if (this.apps.isEmpty( )) {
             loadApps()
         }
-        typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             filterApps(checkedId)
         }
     }
@@ -86,10 +91,10 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
             .subscribe(
                 { processStatus ->
                     if (!processStatus.isDone) {
-                        progressBar.progress = processStatus.progress.toInt()
-                        statusText.text = processStatus.status
+                        binding.progressBar.progress = processStatus.progress.toInt()
+                        binding.statusText.text = processStatus.status
                         processStatus.secondaryStatus?.let {
-                            secondaryStatusText.text = it
+                            binding.secondaryStatusText.text = it
                         }
                     } else {
                         if (processStatus.result != null) {
@@ -108,12 +113,12 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     }
 
     private fun setupList() {
-        loadingView.visibility = View.GONE
-        appsList.visibility = View.VISIBLE
-        typeRadioGroup.visibility = if (withSystemApps) View.VISIBLE else View.GONE
+        binding.loadingView.visibility = View.GONE
+        binding.appsList.visibility = View.VISIBLE
+        binding.typeRadioGroup.visibility = if (withSystemApps) View.VISIBLE else View.GONE
         searchMenuItem?.isVisible = true
-        appsList.setHasFixedSize(true)
-        appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        binding.appsList.setHasFixedSize(true)
+        binding.appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
             Timber.d(selectedApp.name)
             if (selectedApp.name.toLowerCase().contains(BuildConfig.APPLICATION_ID.toLowerCase())) {
@@ -125,7 +130,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
             }
             openProcessActivity(selectedApp, view)
         }
-        appsList.adapter = historyListAdapter
+        binding.appsList.adapter = historyListAdapter
     }
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
