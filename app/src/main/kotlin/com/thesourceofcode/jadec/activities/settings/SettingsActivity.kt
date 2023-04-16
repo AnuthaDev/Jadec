@@ -74,11 +74,11 @@ class SettingsActivity : BaseActivity() {
 
             setPreferencesFromResource(R.xml.preferences, rootKey)
 
-            bindPreferenceSummaryToValue(findPreference("chunkSize"))
-            bindPreferenceSummaryToValue(findPreference("maxAttempts"))
-            bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
+            bindPreferenceSummaryToValue(findPreference("chunkSize")!!)
+            bindPreferenceSummaryToValue(findPreference("maxAttempts")!!)
+            bindPreferenceSummaryToValue(findPreference("memoryThreshold")!!)
 
-            val adPreferences = findPreference("adPreferences")
+            val adPreferences: Preference = findPreference("adPreferences")!!
 
             if (!activity.inEea || activity.isPro()) {
                 adPreferences.parent?.removePreference(adPreferences)
@@ -89,7 +89,7 @@ class SettingsActivity : BaseActivity() {
                 }
             }
 
-            findPreference("clearSourceHistory").setOnPreferenceClickListener {
+            (findPreference("clearSourceHistory") as Preference?)!!.setOnPreferenceClickListener {
                 activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
                 AlertDialog.Builder(context!!)
                     .setTitle(getString(R.string.deleteSourceHistory))
@@ -105,7 +105,7 @@ class SettingsActivity : BaseActivity() {
                 true
             }
 
-            findPreference("customFont").setOnPreferenceChangeListener { _, newValue ->
+            (findPreference("customFont") as Preference?)!!.setOnPreferenceChangeListener { _, newValue ->
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
                 activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
@@ -117,7 +117,7 @@ class SettingsActivity : BaseActivity() {
                 true
             }
 
-            findPreference("darkMode").setOnPreferenceChangeListener { _, newValue ->
+            (findPreference("darkMode") as Preference?)!!.setOnPreferenceChangeListener { _, newValue ->
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
                 activity.firebaseAnalytics.logEvent(Constants.EVENTS.TOGGLE_DARK_MODE, bundle)
