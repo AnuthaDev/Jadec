@@ -22,7 +22,7 @@
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#D32F2F</color>
 
-    <color name="ic_launcher_background">@color/white</color>
+    <color name="ic_launcher_background">#009688</color>
 
     <color name="black">#000000</color>
     <color name="grey_900">#212121</color>
