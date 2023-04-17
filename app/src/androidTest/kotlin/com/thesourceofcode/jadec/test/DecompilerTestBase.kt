@@ -41,7 +41,7 @@ abstract class DecompilerTestBase {
     abstract val type: PackageInfo.Type
 
     private val testAssets: File
-        get() = File(Environment.getExternalStorageDirectory(), "show-java")
+        get() = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "jadec")
             .resolve("test-assets")
 
     private val testApplicationFile: File
@@ -107,7 +107,7 @@ abstract class DecompilerTestBase {
         TestCase.assertNotNull("Can parse PackageInfo from file", packageInfo)
 
         val outputDirectory = File(
-            Environment.getExternalStorageDirectory(), "show-java/sources/${data.getString("name")}"
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "jadec/sources/${data.getString("name")}"
         )
 
         if (outputDirectory.exists()) {

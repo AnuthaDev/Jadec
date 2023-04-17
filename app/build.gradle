@@ -30,7 +30,7 @@ apply plugin: "com.google.firebase.firebase-perf"
 def versionMajor = 0
 def versionMinor = 0
 def versionPatch = 1
-def versionBuild = 16
+def versionBuild = 0
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -135,7 +135,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
+            shrinkResources false
             buildConfigField "Boolean", "EXTENDED_VALIDATION", "true"
         }
         debug {
@@ -183,6 +183,9 @@ dependencies {
     implementation "com.google.firebase:firebase-crashlytics"
     implementation "com.google.firebase:firebase-analytics-ktx"
     implementation "com.google.firebase:firebase-perf"
+
+    def billing_version = "5.2.0"
+    implementation "com.android.billingclient:billing:$billing_version"
 
 
     // AndroidX support libraries
@@ -259,13 +262,10 @@ dependencies {
     //noinspection GradleDependency
     implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
     implementation "com.jakewharton.timber:timber:4.7.1"
-    implementation('org.solovyev.android:checkout:1.2.1', {
-        exclude group: "com.google.code.findbugs", module: "jsr305"
-    })
+//    implementation('org.solovyev.android:checkout:1.2.1', {
+//        exclude group: "com.google.code.findbugs", module: "jsr305"
+//    })
     implementation "pub.devrel:easypermissions:3.0.0"
-    implementation("org.solovyev.android:checkout:1.2.1", {
-        exclude group: "com.google.code.findbugs", module: "jsr305"
-    })
     implementation "com.github.kobakei:MaterialFabSpeedDial:2.0.0"
     implementation "com.daimajia.numberprogressbar:library:1.4@aar"
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"

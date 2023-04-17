@@ -26,7 +26,7 @@ import java.io.File
 /**
  * Path to the priamry storage directory on the user's internal memory
  */
-val appStorage: File = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "show-java")
+val appStorage: File = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "jadec")
 
 /**
  * Check if the given packageInfo points to a system application

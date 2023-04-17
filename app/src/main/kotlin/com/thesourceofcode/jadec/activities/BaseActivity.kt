@@ -24,6 +24,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -84,7 +85,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         if (userPreferences.customFont) {
             context.theme.applyStyle(R.style.LatoFontStyle, true)
         }
-
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(
                 this,
@@ -94,6 +95,9 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             )
             init(savedInstanceState)
         } else {
+            init(savedInstanceState)
+            postPermissionsGrant()
+        }}else{
             init(savedInstanceState)
             postPermissionsGrant()
         }
@@ -215,7 +219,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.bug_report_option -> {
-                val uri = Uri.parse("https://github.com/niranjan94/show-java/issues")
+                val uri = Uri.parse("https://github.com/thesourceofcode/jadec/issues")
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 return true

@@ -20,10 +20,12 @@ package com.thesourceofcode.jadec.activities.landing
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
@@ -77,9 +79,9 @@ class LandingActivity : BaseActivity() {
             onOptionsItemSelected(it)
         }
 
-        if (!isPro()) {
-            binding.navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
-        }
+//        if (!isPro()) {
+            binding.navigationView.menu.findItem(R.id.get_pro_option).isVisible = false
+//        }
 
         binding.drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
@@ -129,7 +131,7 @@ class LandingActivity : BaseActivity() {
                 binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
             }
         }
-        purchaseUtils.initializeCheckout(false, true)
+//        purchaseUtils.initializeCheckout(false, true)
         if (inEea && userPreferences.consentStatus == ConsentStatus.UNKNOWN.ordinal) {
             Ads(context).loadConsentScreen()
         }
@@ -156,7 +158,11 @@ class LandingActivity : BaseActivity() {
                     )
                 }
                 R.id.action_pick_sdcard -> {
-                    pickFile()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                        Toast.makeText(this, "Operation not currently supported", Toast.LENGTH_SHORT).show()
+                    }else {
+                        pickFile()
+                    }
                 }
             }
         }
@@ -244,6 +250,6 @@ class LandingActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        purchaseUtils.onDestroy()
+        //purchaseUtils.onDestroy()
     }
 }

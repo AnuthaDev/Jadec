@@ -42,7 +42,7 @@ class HistoryListAdapter(
                 itemBinding.itemLabel.text = sourceInfo.packageLabel
                 itemBinding.itemSecondaryLabel.text = sourceInfo.packageName
                 val iconPath =
-                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/show-java/sources/${sourceInfo.packageName}/icon.png"
+                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/jadec/sources/${sourceInfo.packageName}/icon.png"
                 if (File(iconPath).exists()) {
                     val iconBitmap = BitmapFactory.decodeFile(iconPath)
                     itemBinding.itemIcon.setImageDrawable(

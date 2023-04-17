@@ -28,7 +28,6 @@ import com.thesourceofcode.jadec.activities.BaseActivity
 import com.thesourceofcode.jadec.databinding.ActivityPurchaseBinding
 import com.thesourceofcode.jadec.utils.secure.PurchaseUtils
 //import kotlinx.android.synthetic.main.activity_purchase.*
-import org.solovyev.android.checkout.*
 import timber.log.Timber
 
 
@@ -59,7 +58,7 @@ class PurchaseActivity : BaseActivity() {
                     purchaseUtils.doOnComplete {
                         finish()
                     }
-                    purchaseUtils.initializeCheckout(true)
+                    //purchaseUtils.initializeCheckout(true)
                     binding.buyButton.setOnClickListener {
                         isLoading(true)
                         makePurchase()
@@ -100,22 +99,23 @@ class PurchaseActivity : BaseActivity() {
 
     private fun makePurchase() {
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null)
-        purchaseUtils.checkout.whenReady(object : Checkout.EmptyListener() {
-            override fun onReady(requests: BillingRequests) {
-                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null)
-                requests.purchase(
-                    ProductTypes.IN_APP,
-                    secureUtils.iapProductId,
-                    null,
-                    purchaseUtils.checkout.purchaseFlow
-                )
-            }
-        })
+        Toast.makeText(this, "Not supported yet", Toast.LENGTH_SHORT).show()
+//        purchaseUtils.checkout.whenReady(object : Checkout.EmptyListener() {
+//            override fun onReady(requests: BillingRequests) {
+//                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null)
+//                requests.purchase(
+//                    ProductTypes.IN_APP,
+//                    secureUtils.iapProductId,
+//                    null,
+//                    purchaseUtils.checkout.purchaseFlow
+//                )
+//            }
+//        })
     }
 
     override fun onDestroy() {
         if (::purchaseUtils.isInitialized) {
-            purchaseUtils.onDestroy()
+            //purchaseUtils.onDestroy()
         }
         super.onDestroy()
     }
@@ -124,7 +124,7 @@ class PurchaseActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (::purchaseUtils.isInitialized) {
-            purchaseUtils.checkout.onActivityResult(requestCode, resultCode, data)
+            //purchaseUtils.checkout.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

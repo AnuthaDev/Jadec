@@ -36,8 +36,6 @@ import com.securepreferences.SecurePreferences
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import org.json.JSONObject
-import org.solovyev.android.checkout.Billing
-import org.solovyev.android.checkout.Purchase
 import timber.log.Timber
 import java.security.MessageDigest
 
@@ -64,7 +62,7 @@ class SecureUtils(val context: Context) {
     fun isSafeExtended(allow: (() -> Unit), doNotAllow: ((PiracyCheckerError, PirateApp?) -> Unit), onError: (() -> Unit)) {
         Timber.d("[pa] isSafeExtended")
         context.piracyChecker {
-            enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
+            //enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
             if (BuildConfig.EXTENDED_VALIDATION) {
                 enableInstallerId(InstallerID.GOOGLE_PLAY)
                 enableUnauthorizedAppsCheck()
@@ -84,13 +82,13 @@ class SecureUtils(val context: Context) {
         }.start()
     }
 
-    fun getBilling(): Billing {
-        return Billing(context, object : Billing.DefaultConfiguration() {
-            override fun getPublicKey(): String {
-                return BuildConfig.PLAY_LICENSE_KEY
-            }
-        })
-    }
+//    fun getBilling(): Billing {
+//        return Billing(context, object : Billing.DefaultConfiguration() {
+//            override fun getPublicKey(): String {
+//                return BuildConfig.PLAY_LICENSE_KEY
+//            }
+//        })
+//    }
 
     fun hasPurchasedPro(): Boolean {
         if (hasPurchasedPro != null) {
@@ -99,17 +97,17 @@ class SecureUtils(val context: Context) {
         return getPreferences().getBoolean(iapProductId, false)
     }
 
-    fun isPurchaseValid(purchase: Purchase, jsonObject: JSONObject): Boolean {
-        if (jsonObject.has("isPurchased") && jsonObject.has("orderId")) {
-            return jsonObject.getBoolean("isPurchased") && jsonObject.getString("orderId") == purchase.orderId
-        }
-        return false
-    }
+//    fun isPurchaseValid(purchase: Purchase, jsonObject: JSONObject): Boolean {
+//        if (jsonObject.has("isPurchased") && jsonObject.has("orderId")) {
+//            return jsonObject.getBoolean("isPurchased") && jsonObject.getString("orderId") == purchase.orderId
+//        }
+//        return false
+//    }
 
-    fun onPurchaseComplete(purchase: Purchase) {
-        hasPurchasedPro = true
-        getPreferences().edit().putBoolean(purchase.sku, true).commit()
-    }
+//    fun onPurchaseComplete(purchase: Purchase) {
+//        hasPurchasedPro = true
+//        getPreferences().edit().putBoolean(purchase.sku, true).commit()
+//    }
 
     fun onPurchaseRevert() {
         hasPurchasedPro = false

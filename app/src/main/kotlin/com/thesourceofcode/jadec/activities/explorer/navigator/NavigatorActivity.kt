@@ -100,7 +100,7 @@ class NavigatorActivity : BaseActivity() {
         } else {
             setSubtitle(
                 startDirectory.canonicalPath.replace(
-                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/show-java/sources/$packageName/",
+                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/jadec/sources/$packageName/",
                     ""
                 )
             )

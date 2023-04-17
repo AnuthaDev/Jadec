@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="3dp"
-            android:text="@string/niranjan94Username"
+            android:text="@string/dev_Username"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView

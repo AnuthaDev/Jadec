@@ -35,7 +35,7 @@
     <string name="about">About</string>
     <string name="invertBackgroundColor">Invert background color</string>
     <string name="storagePermissionRationale">
-        <xliff:g id="appName">Show Java</xliff:g>
+        <xliff:g id="appName">Jadec</xliff:g>
         requires storage permission to store decompiled sources
     </string>
     <string name="welcome">Welcome</string>
@@ -63,8 +63,8 @@
     <string name="actionAppAlreadyDecompiled">This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?</string>
     <string name="noSupportedHandlerForFileType">No supported applications for this file type.</string>
     <string name="searchApps">Search apps</string>
-    <string name="niranjan94" translatable="false">niranjan94</string>
-    <string name="niranjan94Username" translatable="false">\@niranjan94</string>
+    <string name="developer" translatable="false">The Source of Code</string>
+    <string name="dev_Username" translatable="false">\@thesourceofcode</string>
     <string name="apkParseFailed">Failed to parse the selected apk file</string>
     <string name="jarUnsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
     <string name="unsupported_file">File is unsupported.</string>
@@ -156,15 +156,15 @@
     <string name="themeChangeCloseInfo">Close and re-open app for the theme to take complete effect</string>
     <string name="fileBugReport">File a bug report</string>
     <string name="appReportThanks">Thanks for reporting :). The high memory usage will be investigated.</string>
-    <string name="purchaseVerificationFailed">Purchase verification failed. Please try again. If issue persists, drop in an email at me\@niranjan.io</string>
-    <string name="purchaseSuccess">Thank you for purchasing Show Java Pro ! :) You are awesome !</string>
+    <string name="purchaseVerificationFailed">Purchase verification failed. Please try again. If issue persists, drop in an email</string>
+    <string name="purchaseSuccess">Thank you for purchasing Pro ! :) You are awesome !</string>
     <string name="purchaseInitError">An error occurred while initializing purchase. Please try again later.</string>
     <string name="deviceVerificationFailed">
-        Device failed the verification for making in-app purchases on Show Java.
+        Device failed the verification for making in-app purchases
         (<xliff:g example="PIRATE_APP_CHECK" id="errorName">%1$s</xliff:g>)
     </string>
     <string name="deviceVerificationFailedPirateApp">
-        You cannot make in-app purchases on Show Java due to the presence of the app <xliff:g example="Lucky Patcher" id="appName">%1$s</xliff:g>
+        You cannot make in-app purchases on Jadec due to the presence of the app <xliff:g example="Lucky Patcher" id="appName">%1$s</xliff:g>
         which is flagged as one that is used for piracy.
     </string>
     <string name="adPreferences">Ads Preferences</string>
