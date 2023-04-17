@@ -23,7 +23,7 @@ apply plugin: "com.google.firebase.crashlytics"
 apply plugin: "com.google.android.gms.oss-licenses-plugin"
 //apply plugin: "io.michaelrocks.paranoid"
 apply plugin: "com.google.gms.google-services"
-apply plugin: "ru.tinkoff.gradle.jarjar"
+//apply plugin: "ru.tinkoff.gradle.jarjar"
 apply plugin: "com.google.firebase.firebase-perf"
 
 
@@ -219,7 +219,7 @@ dependencies {
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
     // older than what we need and hence missing stuff.
-    jarJar files("libs/dx-1.16.jar")
+//    jarJar files("libs/dx-1.16.jar")
 
     // JaDX & friends
     implementation files("libs/jadx-core-0.9.0.jar")
@@ -245,11 +245,11 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
 
     // Testing tools
-    testImplementation "junit:junit:4.12"
-    androidTestImplementation "junit:junit:4.12"
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "junit:junit:4.13.2"
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.google.code.findbugs", module: "jsr305"
@@ -277,9 +277,9 @@ dependencies {
     implementation fileTree(dir: "build/libs", include: ["*.jar"])
 }
 
-jarJar {
-    rules = ["dx-1.16.jar": "com.android.** xyz.codezero.android.@1"]
-}
+//jarJar {
+//    rules = ["dx-1.16.jar": "com.android.** xyz.codezero.android.@1"]
+//}
 
 apply plugin: "hiBeaver"
 
