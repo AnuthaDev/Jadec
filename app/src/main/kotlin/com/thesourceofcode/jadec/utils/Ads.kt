@@ -46,8 +46,7 @@ class Ads(val context: Context) {
 
     @SuppressLint("ApplySharedPref")
     fun init() {
-        MobileAds.initialize(context,
-            OnInitializationCompleteListener { initializationStatus: InitializationStatus? -> })
+        MobileAds.initialize(context)
         val publisherIds = arrayOf(context.getString(R.string.admobPublisherId))
         consentInformation.requestConsentInfoUpdate(
             publisherIds,
