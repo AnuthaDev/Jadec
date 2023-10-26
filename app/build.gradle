@@ -59,7 +59,7 @@ try {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
     dexOptions {
         preDexLibraries = preDexEnabled && !isCi
     }
@@ -164,7 +164,7 @@ android {
     namespace 'com.thesourceofcode.jadec'
 }
 
-configurations.all {
+configurations.configureEach {
     resolutionStrategy {
         force "com.google.code.findbugs:jsr305:2.0.3"
     }
@@ -184,18 +184,18 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics-ktx"
     implementation "com.google.firebase:firebase-perf"
 
-    def billing_version = "5.2.0"
+    def billing_version = "6.0.1"
     implementation "com.android.billingclient:billing:$billing_version"
 
 
     // AndroidX support libraries
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation "com.google.android.material:material:1.8.0"
+    implementation "com.google.android.material:material:1.10.0"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.preference:preference:1.2.0"
-    implementation "androidx.recyclerview:recyclerview:1.3.0"
-    implementation 'androidx.core:core:1.10.0'
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+    implementation "androidx.preference:preference-ktx:1.2.1"
+    implementation "androidx.recyclerview:recyclerview:1.3.2"
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     implementation "com.google.android.ads.consent:consent-library:1.0.8"
@@ -216,7 +216,7 @@ dependencies {
 
     // CFR Decompiler
     implementation 'org.benf:cfr:0.152'
-    implementation 'com.google.android.gms:play-services-ads-lite:22.0.0'
+    implementation 'com.google.android.gms:play-services-ads-lite:22.4.0'
 
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
