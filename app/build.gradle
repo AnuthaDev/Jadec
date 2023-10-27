@@ -64,6 +64,7 @@ android {
         preDexLibraries = preDexEnabled && !isCi
     }
 
+
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
@@ -225,14 +226,18 @@ dependencies {
 //    jarJar files("libs/dx-1.16.jar")
 
     // JaDX & friends
-    implementation files("libs/jadx-core-0.9.0.jar")
-    implementation files("libs/dx-1.16.jar")
-    implementation files("libs/android-5.1.jar")
-    implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'org.slf4j:slf4j-simple:1.7.26'
+    implementation('io.github.skylot:jadx-core:1.4.7', {
+        exclude group: "com.google.protobuf", module: "protobuf-java"
+    })
 
-    // Required by JADX
-    implementation 'uk.com.robust-it:cloning:1.9.11'
+    implementation "io.github.skylot:jadx-dex-input:1.4.7"
+    implementation files("libs/dx-1.16.jar")
+//    implementation files("libs/android-5.1.jar")
+//    implementation 'org.slf4j:slf4j-api:1.7.32'
+//    implementation 'org.slf4j:slf4j-simple:1.7.26'
+//
+//    // Required by JADX
+//    implementation 'uk.com.robust-it:cloning:1.9.11'
     // Fix version to 1.9.11. Update to 1.9.12 causes compilation to fail due to org.objenesis:3.0.1
     // implementation "ch.qos.logback:logback-classic:1.2.3"
     // implementation "ch.qos.logback:logback-core:1.2.3"
