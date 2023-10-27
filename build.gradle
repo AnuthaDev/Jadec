@@ -32,7 +32,6 @@ buildscript {
         classpath 'com.google.gms:google-services:4.4.0'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
         classpath 'com.google.firebase:perf-plugin:1.4.2'
-        classpath "com.bryansharp:hibeaver:1.2.7"
         classpath "io.michaelrocks:paranoid-gradle-plugin:0.3.7"
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.6'
 //        classpath "ru.tinkoff.gradle:jarjar:1.1.0"

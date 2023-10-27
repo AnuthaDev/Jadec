@@ -84,6 +84,7 @@ class DecompilerProcessActivity : BaseActivity() {
         binding.decompilerItemCard.decompilerName.text = decompilers[decompilerIndex]
         binding.decompilerItemCard.decompilerDescription.text = decompilerDescriptions[decompilerIndex]
 
+
         setupGears()
 
         val statusIntentFilter = IntentFilter(Constants.WORKER.ACTION.BROADCAST + packageInfo.name)

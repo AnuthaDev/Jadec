@@ -18,7 +18,7 @@
 
 package com.thesourceofcode.jadec.utils.streams
 
-import jadx.api.JadxArgs
+import jadx.api.ICodeInfo
 import jadx.core.dex.nodes.ClassNode
 import java.io.File
 
@@ -30,7 +30,7 @@ object Logger {
      */
     @Suppress("UNUSED_PARAMETER")
     @JvmStatic
-    fun logJadxClassWrite(dir: File, args: JadxArgs, cls: ClassNode) {
+    fun logJadxClassWrite(dir: File, cls: ClassNode, info: ICodeInfo) {
         println("Decompiling " + cls.fullName)
     }
 }
