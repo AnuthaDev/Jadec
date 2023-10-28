@@ -232,6 +232,11 @@ dependencies {
 
     implementation "io.github.skylot:jadx-dex-input:1.4.7"
     implementation files("libs/dx-1.16.jar")
+    implementation files("libs/fernflower.jar")
+
+
+    //Procyon
+    implementation 'org.bitbucket.mstrobel:procyon-compilertools:0.6.0'
 //    implementation files("libs/android-5.1.jar")
 //    implementation 'org.slf4j:slf4j-api:1.7.32'
 //    implementation 'org.slf4j:slf4j-simple:1.7.26'
@@ -246,7 +251,7 @@ dependencies {
     implementation 'net.dongliu:apk-parser:2.6.9'
 
     // Fernflower decompiler
-    implementation "com.github.fesh0r:fernflower:a0a8f0a8dd"
+//    implementation "com.github.fesh0r:fernflower:e19aab61ce"
 
     // RxAndroid & friends
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
