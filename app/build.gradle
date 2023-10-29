@@ -151,6 +151,7 @@ android {
     sourceSets {
         main.java.srcDirs += "src/main/kotlin"
         main.resources.srcDirs += "src/main/config"
+        main.resources.srcDirs += "src/main/resources"
         test.java.srcDirs += "src/test/kotlin"
         androidTest.java.srcDirs += "src/androidTest/kotlin"
     }
@@ -234,9 +235,16 @@ dependencies {
     implementation files("libs/dx-1.16.jar")
     implementation files("libs/fernflower.jar")
 
+    implementation files("libs/procyon-decompiler.jar")
+    implementation files("libs/procyon-compilertools.jar")
+    implementation files("libs/procyon-core.jar")
+
+
+
+
 
     //Procyon
-    implementation 'org.bitbucket.mstrobel:procyon-compilertools:0.6.0'
+    //implementation 'org.bitbucket.mstrobel:procyon-compilertools:0.6.0'
 //    implementation files("libs/android-5.1.jar")
 //    implementation 'org.slf4j:slf4j-api:1.7.32'
 //    implementation 'org.slf4j:slf4j-simple:1.7.26'

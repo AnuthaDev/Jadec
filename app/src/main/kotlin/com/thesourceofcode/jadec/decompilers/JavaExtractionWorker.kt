@@ -21,6 +21,17 @@ package com.thesourceofcode.jadec.decompilers
 import android.content.Context
 import androidx.work.Data
 import androidx.work.ListenableWorker
+import com.strobel.assembler.InputTypeLoader
+import com.strobel.assembler.metadata.CompositeTypeLoader
+import com.strobel.assembler.metadata.JarTypeLoader
+import com.strobel.assembler.metadata.MetadataSystem
+import com.strobel.assembler.metadata.TypeDefinition
+import com.strobel.assembler.metadata.TypeReference
+import com.strobel.core.StringUtilities
+import com.strobel.decompiler.DecompilationOptions
+import com.strobel.decompiler.Decompiler
+import com.strobel.decompiler.DecompilerSettings
+import com.strobel.decompiler.PlainTextOutput
 import com.thesourceofcode.jadec.R
 import com.thesourceofcode.jadec.data.SourceInfo
 import com.thesourceofcode.jadec.utils.ZipUtils
@@ -31,8 +42,19 @@ import org.apache.commons.io.FileUtils
 import org.benf.cfr.reader.api.CfrDriver
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler
 import timber.log.Timber
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStreamWriter
+import java.io.Writer
+import java.lang.ClassLoader.getSystemResource
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.zip.ZipException
+import java.util.zip.ZipOutputStream
+
 
 /**
  * The [JavaExtractionWorker] does the actual decompilation of extracting the `java` source from
@@ -60,7 +82,147 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         val cfrDriver = CfrDriver.Builder().withOptions(options).build()
         cfrDriver.analyse(jarFiles.map { it.canonicalPath })
     }
+//
+//    @Throws(Exception::class)
+//    private fun decompileWithProcyon(inFile: File, outFile: File) {
+//        JarFile(inFile).use { jfile ->
+//            FileOutputStream(outFile).use { dest ->
+//                BufferedOutputStream(dest).use { buffDest ->
+//                    ZipOutputStream(buffDest).use { out ->
+//                        //bar.setMinimum(0)
+//                       // bar.setMaximum(jfile.size())
+//                        val data = ByteArray(1024)
+//                        val settings: DecompilerSettings = DecompilerSettings.javaDefaults()
+//                        settings.typeLoader = InputTypeLoader()
+////                        val typeLoader = LuytenTypeLoader()
+////                        val jarLoader: ITypeLoader = JarTypeLoader(jfile)
+//                        //typeLoader.getTypeLoaders().add(jarLoader)
+//                        val decompilationOptions = DecompilationOptions()
+//                        decompilationOptions.settings = settings
+//                        decompilationOptions.isFullDecompilation = true
+//
+//                        settings.typeLoader = CompositeTypeLoader(JarTypeLoader(jfile), settings.typeLoader)
+//                        val metadataSystem = MetadataSystem(settings.typeLoader)
+//
+//                        var mass: List<String?>? = null
+//                        //val jarEntryFilter = JarEntryFilter(jfile)
+////                        val luytenPrefs: LuytenPreferences =
+////                            ConfigSaver.getLoadedInstance().getLuytenPreferences()
+////                        mass = if (luytenPrefs.isFilterOutInnerClassEntries()) {
+////                            jarEntryFilter.getEntriesWithoutInnerClasses()
+////                        } else {
+////                            jarEntryFilter.getAllEntriesFromJar()
+////                        }
+//                        val ent = jfile.entries()
+//                        val history: MutableSet<String> =
+//                            HashSet()
+//                        var tick = 0
+//                        while (ent.hasMoreElements()) {
+//                            val entry = ent.nextElement()
+//                            if (entry.name.endsWith(".class")) {
+//                                val etn =
+//                                    JarEntry(entry.name.replace(".class", ".java"))
+//                                println("[SaveAll]: " + etn.name + " -> " + outFile.name)
+//                                if (history.add(etn.name)) {
+//                                    out.putNextEntry(etn)
+//                                    try {
+//                                        val isUnicodeEnabled =
+//                                            decompilationOptions.settings.isUnicodeOutputEnabled
+//                                        val internalName =
+//                                            StringUtilities.removeRight(entry.name, ".class")
+//                                        val type: TypeReference? =
+//                                            metadataSystem.lookupType(internalName)
+//                                        var resolvedType: TypeDefinition? = null
+//                                        if (type == null || type.resolve()
+//                                                .also { resolvedType = it } == null
+//                                        ) {
+//                                            throw java.lang.Exception("Unable to resolve type.")
+//                                        }
+//                                        val writer: Writer =
+//                                            if (isUnicodeEnabled) OutputStreamWriter(
+//                                                out,
+//                                                "UTF-8"
+//                                            ) else OutputStreamWriter(out)
+//                                        val plainTextOutput = PlainTextOutput(writer)
+//                                        plainTextOutput.isUnicodeOutputEnabled = isUnicodeEnabled
+//                                        settings.language
+//                                            .decompileType(
+//                                                resolvedType,
+//                                                plainTextOutput,
+//                                                decompilationOptions
+//                                            )
+//                                        writer.flush()
+//                                    } catch (e: java.lang.Exception) {
+////                                        label.setText("Cannot decompile file: " + entry.name)
+////                                        Luyten.showExceptionDialog(
+////                                            "Unable to Decompile file!\nSkipping file...",
+////                                            e
+////                                        )
+//                                    } finally {
+//                                        out.closeEntry()
+//                                    }
+//                                }
+//                            } else {
+//                                try {
+//                                    var etn =
+//                                        JarEntry(entry.name)
+//                                    if (entry.name.endsWith(".java")) etn =
+//                                        JarEntry(
+//                                            entry.name.replace(".java", ".src.java")
+//                                        )
+//                                    if (history.add(etn.name)) {
+//                                        out.putNextEntry(etn)
+//                                        try {
+//                                            jfile.getInputStream(etn)?.use { inp ->
+//                                                var count: Int
+//                                                while (inp.read(data, 0, 1024)
+//                                                        .also { count = it } != -1
+//                                                ) {
+//                                                    out.write(data, 0, count)
+//                                                }
+//                                            }
+//                                        } finally {
+//                                            out.closeEntry()
+//                                        }
+//                                    }
+//                                } catch (ze: ZipException) {
+//                                    if (!ze.message!!.contains("duplicate")) {
+//                                        throw ze
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
 
+
+
+    @Throws(Exception::class)
+    private fun decompileWithProcyon(jarInputFiles: File, javaOutputDir: File) {
+        val settings = DecompilerSettings.javaDefaults()
+        val jf = JarFile(jarInputFiles)
+        settings.typeLoader = JarTypeLoader(jf)
+
+        try {
+            FileOutputStream(javaOutputDir).use { stream ->
+                OutputStreamWriter(stream).use { writer ->
+                    Decompiler.decompile(
+                        "com/italankin/fifteen/MainActivity",
+                        PlainTextOutput(writer),
+                        settings
+                    )
+                }
+            }
+        } catch (e: IOException) {
+            // handle error
+        }
+        //val loader = ClassLoader.getSystemClassLoader();
+
+    }
     /**
      * Do the decompilation using the JaDX decompiler.
      *
@@ -127,7 +289,14 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         try {
             when (decompiler) {
                 "jadx" -> decompileWithJaDX(outputDexFiles, outputJavaSrcDirectory)
-                "cfr" -> decompileWithCFR(outputJarFiles, outputJavaSrcDirectory)
+
+
+                "cfr" -> {
+                    val fl = outputJavaSrcDirectory.resolve("out.java")
+                    fl.createNewFile()
+                    decompileWithProcyon(outputJarFiles.listFiles()[0], fl)
+                }
+                //"cfr" -> decompileWithCFR(outputJarFiles, outputJavaSrcDirectory)
                 "fernflower" -> decompileWithFernFlower(outputJarFiles, outputJavaSrcDirectory)
             }
         } catch (e: Exception) {
