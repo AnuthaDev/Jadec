@@ -211,10 +211,11 @@ dependencies {
     // Dex2Jar & friends
     implementation "asm:asm-all:3.3.1"
     implementation 'org.smali:dexlib2:2.5.2'
-    implementation files("libs/dex-ir-1.12.jar")
-    implementation files("libs/dex-reader-1.15.jar")
-    implementation files("libs/dex-tools-0.0.9.15.jar")
-    implementation files("libs/dex-translator-0.0.9.15.jar")
+    implementation files("libs/dex-ir-v2.4.jar")
+    implementation files("libs/dex-reader-v2.4.jar")
+    implementation files("libs/dex-tools-v2.4.jar")
+    implementation files("libs/dex-translator-v2.4.jar")
+    implementation files("libs/dex-reader-api-v2.4.jar")
 
     // CFR Decompiler
     implementation 'org.benf:cfr:0.152'

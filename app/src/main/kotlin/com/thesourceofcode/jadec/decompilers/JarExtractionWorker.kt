@@ -21,11 +21,11 @@ package com.thesourceofcode.jadec.decompilers
 import android.content.Context
 import androidx.work.Data
 import androidx.work.ListenableWorker
-import com.googlecode.dex2jar.Method
-import com.googlecode.dex2jar.ir.IrMethod
-import com.googlecode.dex2jar.reader.DexFileReader
-import com.googlecode.dex2jar.v3.Dex2jar
-import com.googlecode.dex2jar.v3.DexExceptionHandler
+import com.googlecode.d2j.Method
+import com.googlecode.d2j.reader.DexFileReader
+import com.googlecode.d2j.dex.Dex2jar
+import com.googlecode.d2j.dex.DexExceptionHandler
+import com.googlecode.d2j.node.DexMethodNode
 import com.thesourceofcode.jadec.R
 import com.thesourceofcode.jadec.data.PackageInfo
 import com.thesourceofcode.jadec.utils.UserPreferences
@@ -38,7 +38,7 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.dexbacked.DexBackedOdexFile
 import org.jf.dexlib2.iface.ClassDef
 import org.jf.dexlib2.immutable.ImmutableDexFile
-import org.objectweb.asm.tree.MethodNode
+import org.objectweb.asm.MethodVisitor
 import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.InputStream
@@ -207,7 +207,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
             setStep(context.getString(R.string.writingJarFile))
 
-            outputDexFiles.listFiles().forEachIndexed { index, outputDexFile ->
+            outputDexFiles.listFiles()?.forEachIndexed { index, outputDexFile ->
                 if (outputDexFile.exists() && outputDexFile.isFile) {
                     val dexExceptionHandlerMod = DexExceptionHandlerMod()
                     val reader = DexFileReader(outputDexFile)
@@ -217,7 +217,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                         .skipDebug(!debugInfo)
                         .optimizeSynchronized(optimizeSynchronized)
                         .printIR(printIR)
-                        .verbose(verbose)
+//                        .verbose(verbose)
                     dex2jar.exceptionHandler = dexExceptionHandlerMod
                     dex2jar.to(outputJarFiles.resolve("$index.jar"))
 
@@ -239,13 +239,14 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         }
 
         override fun handleMethodTranslateException(
-            method: Method,
-            irMethod: IrMethod,
-            methodNode: MethodNode,
-            e: Exception
+            method: Method?,
+            dexMethodNode: DexMethodNode?,
+            methodVisitor: MethodVisitor?,
+            e: java.lang.Exception?
         ) {
             Timber.d("Dex2Jar Exception $e")
         }
+
     }
 
     override fun doWork(): ListenableWorker.Result {
