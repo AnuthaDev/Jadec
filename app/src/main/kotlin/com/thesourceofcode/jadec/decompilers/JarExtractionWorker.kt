@@ -155,7 +155,6 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         setStep(context.getString(R.string.mergingClasses))
         Timber.d("Total class to write ${classes.size}")
         setStep(context.getString(R.string.writingDexFile))
-
         val chunkedClasses = classes.chunked(
             data.getInt("chunkSize", UserPreferences.DEFAULTS.CHUNK_SIZE)
         )
@@ -207,6 +206,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
             setStep(context.getString(R.string.writingJarFile))
 
+
             outputDexFiles.listFiles()?.forEachIndexed { index, outputDexFile ->
                 if (outputDexFile.exists() && outputDexFile.isFile) {
                     val dexExceptionHandlerMod = DexExceptionHandlerMod()
@@ -217,10 +217,10 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                         .skipDebug(!debugInfo)
                         .optimizeSynchronized(optimizeSynchronized)
                         .printIR(printIR)
+
 //                        .verbose(verbose)
                     dex2jar.exceptionHandler = dexExceptionHandlerMod
                     dex2jar.to(outputJarFiles.resolve("$index.jar"))
-
                     if (!keepIntermediateFiles) {
                         outputDexFile.delete()
                     }
