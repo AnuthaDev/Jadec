@@ -23,15 +23,19 @@ import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.strobel.assembler.InputTypeLoader
 import com.strobel.assembler.metadata.CompositeTypeLoader
+import com.strobel.assembler.metadata.DeobfuscationUtilities
+import com.strobel.assembler.metadata.IMetadataResolver
+import com.strobel.assembler.metadata.ITypeLoader
 import com.strobel.assembler.metadata.JarTypeLoader
+import com.strobel.assembler.metadata.MetadataParser
 import com.strobel.assembler.metadata.MetadataSystem
 import com.strobel.assembler.metadata.TypeDefinition
-import com.strobel.assembler.metadata.TypeReference
 import com.strobel.core.StringUtilities
+import com.strobel.core.VerifyArgument
 import com.strobel.decompiler.DecompilationOptions
-import com.strobel.decompiler.Decompiler
 import com.strobel.decompiler.DecompilerSettings
 import com.strobel.decompiler.PlainTextOutput
+import com.strobel.decompiler.languages.java.JavaFormattingOptions
 import com.thesourceofcode.jadec.R
 import com.thesourceofcode.jadec.data.SourceInfo
 import com.thesourceofcode.jadec.utils.ZipUtils
@@ -42,18 +46,13 @@ import org.apache.commons.io.FileUtils
 import org.benf.cfr.reader.api.CfrDriver
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler
 import timber.log.Timber
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.OutputStreamWriter
-import java.io.Writer
-import java.lang.ClassLoader.getSystemResource
-import java.util.jar.JarEntry
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.util.jar.JarFile
-import java.util.zip.ZipException
-import java.util.zip.ZipOutputStream
 
 
 /**
@@ -199,30 +198,153 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 //    }
 //
 
+    internal class NoRetryMetadataSystem : MetadataSystem {
+        private val _failedTypes: MutableSet<String> = HashSet()
+
+        constructor()
+        constructor(typeLoader: ITypeLoader?) : super(typeLoader)
+
+        override fun resolveType(descriptor: String, mightBePrimitive: Boolean): TypeDefinition? {
+            if (_failedTypes.contains(descriptor)) {
+                return null
+            }
+            val result = super.resolveType(descriptor, mightBePrimitive)
+            if (result == null) {
+                _failedTypes.add(descriptor)
+            }
+            return result
+        }
+    }
+    internal class FileOutputWriter(
+        /**
+         * Returns the file to which 'this' is writing.
+         *
+         * @return the file to which 'this' is writing
+         */
+        val file: File, settings: DecompilerSettings
+    ) :
+        OutputStreamWriter(
+            FileOutputStream(file),
+            if (settings.isUnicodeOutputEnabled) StandardCharsets.UTF_8 else Charset.defaultCharset()
+        )
 
 
     @Throws(Exception::class)
-    private fun decompileWithProcyon(jarInputFiles: File, javaOutputDir: File) {
-        val settings = DecompilerSettings.javaDefaults()
-        val jf = JarFile(jarInputFiles)
-        settings.typeLoader = JarTypeLoader(jf)
+    private fun decompileWithProcyon(inFile: File, outFile: File) {
 
-        try {
-            FileOutputStream(javaOutputDir).use { stream ->
-                OutputStreamWriter(stream).use { writer ->
-                    Decompiler.decompile(
-                        "com/italankin/fifteen/MainActivity",
-                        PlainTextOutput(writer),
-                        settings
-                    )
+        inFile.listFiles()?.forEach {inJar->
+            JarFile(inJar).use { jfile ->
+
+                val data = ByteArray(1024)
+                val settings: DecompilerSettings = DecompilerSettings.javaDefaults()
+                settings.typeLoader = CompositeTypeLoader(JarTypeLoader(jfile), InputTypeLoader())
+                settings.javaFormattingOptions =
+                    JavaFormattingOptions.createDefault()
+                settings.forceExplicitImports = true
+                settings.showSyntheticMembers = false
+                val entries = jfile.entries()
+
+                var classesDecompiled = 0
+
+                var metadataSystem = NoRetryMetadataSystem(settings.typeLoader)
+                metadataSystem.isEagerMethodLoadingEnabled = true
+
+                while (entries.hasMoreElements()) {
+                    if (++classesDecompiled % 100 == 0) {
+                        metadataSystem = NoRetryMetadataSystem(settings.typeLoader);
+                    }
+                    val entry = entries.nextElement()
+                    val name = entry.name
+
+                    if (!name.endsWith(".class")) {
+                        continue
+                    }
+
+                    val internalName = StringUtilities.removeRight(name, ".class")
+
+                    val outf = outFile.resolve("$internalName.java")
+                    outf.parentFile?.mkdirs()
+                    outf.createNewFile()
+
+
+
+                    FileOutputStream(outf).use { stream ->
+                        OutputStreamWriter(stream).use { writer ->
+
+                            val output = PlainTextOutput(writer)
+
+                            VerifyArgument.notNull(internalName, "internalName")
+                            VerifyArgument.notNull(settings, "settings")
+                            val type: Any?
+                            type = if (internalName.length == 1) {
+                                val parser = MetadataParser(IMetadataResolver.EMPTY)
+                                val reference = parser.parseTypeDescriptor(internalName)
+                                metadataSystem.resolve(reference)
+                            } else {
+                                metadataSystem.lookupType(internalName)
+                            }
+
+                            val resolvedType: TypeDefinition?
+                            if (type != null) {
+                                resolvedType = type.resolve()
+                                DeobfuscationUtilities.processType(resolvedType)
+                                val options = DecompilationOptions()
+                                options.settings = settings
+                                options.isFullDecompilation = true
+
+                                if (!(resolvedType.isAnonymous || resolvedType.isSynthetic || resolvedType.isNested)) {
+
+                                    println("Decompiling " + internalName.replace('/', '.'))
+                                    classesDecompiled++
+
+                                    settings.language.decompileType(resolvedType, output, options)
+                                } else {
+                                    outf.delete()
+                                }
+                            } else {
+                                output.writeLine(
+                                    "!!! ERROR: Failed to load class %s.",
+                                    *arrayOf<Any>(internalName)
+                                )
+                            }
+                        }
+                    }
+
+
+                    //                if (entry.name.endsWith(".class")) {
+                    //                    val etn =
+                    //                        JarEntry(entry.name.replace(".class", ".java"))
+                    //                    Timber.tag("[SaveAll]: ").d(etn.name + " -> " + outFile.name)
+                    //                }
                 }
             }
-        } catch (e: IOException) {
-            // handle error
         }
-        //val loader = ClassLoader.getSystemClassLoader();
-
     }
+
+
+//    @Throws(Exception::class)
+//    private fun decompileWithProcyon(jarInputFiles: File, javaOutputDir: File) {
+//        val settings = DecompilerSettings.javaDefaults()
+//        val jf = JarFile(jarInputFiles)
+//        settings.typeLoader = JarTypeLoader(jf)
+//
+//        try {
+//            FileOutputStream(javaOutputDir).use { stream ->
+//                OutputStreamWriter(stream).use { writer ->
+//                    println("Decompiling " + "com/italankin/fifteen/export/RecordsExporter".replace('/', '.'))
+//                    Decompiler.decompile(
+//                        "com/italankin/fifteen/export/RecordsExporter",
+//                        PlainTextOutput(writer),
+//                        settings
+//                    )
+//                }
+//            }
+//        } catch (e: IOException) {
+//            // handle error
+//        }
+//        //val loader = ClassLoader.getSystemClassLoader();
+//
+//    }
     /**
      * Do the decompilation using the JaDX decompiler.
      *
@@ -292,9 +414,10 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
 
                 "cfr" -> {
-                    val fl = outputJavaSrcDirectory.resolve("out.java")
-                    fl.createNewFile()
-                    decompileWithProcyon(outputJarFiles.listFiles()[0], fl)
+//                    val fl = outputJavaSrcDirectory.resolve("out.java")
+//                    fl.createNewFile()
+//                    decompileWithProcyon(outputJarFiles.listFiles()[0], fl)
+                    decompileWithProcyon(outputJarFiles, outputJavaSrcDirectory)
                 }
                 //"cfr" -> decompileWithCFR(outputJarFiles, outputJavaSrcDirectory)
                 "fernflower" -> decompileWithFernFlower(outputJarFiles, outputJavaSrcDirectory)
