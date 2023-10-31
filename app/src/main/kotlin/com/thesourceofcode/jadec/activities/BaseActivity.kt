@@ -32,6 +32,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import com.google.ads.consent.ConsentInformation
 import com.google.ads.consent.ConsentStatus
 import com.google.ads.mediation.admob.AdMobAdapter
@@ -101,6 +102,17 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         } else {
             init(savedInstanceState)
             postPermissionsGrant()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!EasyPermissions.hasPermissions(this,Manifest.permission.POST_NOTIFICATIONS)) {
+
+                EasyPermissions.requestPermissions(
+                    this,
+                    "Please allow notification permission :-)",
+                    1010,
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            }
         }
     }
 
@@ -262,10 +274,16 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        if (perms.isNotEmpty() || EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            AppSettingsDialog.Builder(this)
-                .build()
-                .show()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            if (perms.isNotEmpty() || EasyPermissions.somePermissionPermanentlyDenied(
+                    this,
+                    perms
+                )
+            ) {
+                AppSettingsDialog.Builder(this)
+                    .build()
+                    .show()
+            }
         }
     }
 
@@ -276,16 +294,22 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     @Deprecated("Deprecated in Java")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(
-                    this,
-                    R.string.storagePermissionRationale,
-                    Toast.LENGTH_LONG
-                ).show()
-                //finish()
-            } else {
-                postPermissionsGrant()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+                if (!EasyPermissions.hasPermissions(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                ) {
+                    Toast.makeText(
+                        this,
+                        R.string.storagePermissionRationale,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    //finish()
+                } else {
+                    postPermissionsGrant()
+                }
             }
         }
     }

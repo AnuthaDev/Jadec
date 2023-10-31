@@ -19,5 +19,6 @@
 
 <resources>
     <color name="colorPrimaryDark">#222222</color>
+    <color name="toolbarColor">@color/colorPrimaryDark</color>
 
 </resources>
