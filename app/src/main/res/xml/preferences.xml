@@ -130,8 +130,8 @@
             android:summary="@string/reportBugPreferenceSummary"
             android:title="@string/reportBug">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/thesourceofcode/jadec/issues"/>
+                android:action="android.intent.action.SENDTO"
+                android:data="mailto:thesourceofcode@gmail.com"/>
         </Preference>
 
         <Preference

@@ -116,7 +116,6 @@ class SettingsActivity : BaseActivity() {
                 }
                 true
             }
-
             (findPreference("darkMode") as Preference?)!!.setOnPreferenceChangeListener { _, newValue ->
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
@@ -129,12 +128,6 @@ class SettingsActivity : BaseActivity() {
                         AppCompatDelegate.MODE_NIGHT_NO
                 )
 
-                Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
-
-                activity.let {
-                    it.startActivity(Intent(it, SettingsActivity::class.java))
-                    it.finish()
-                }
 
                 true
             }

@@ -27,6 +27,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
@@ -75,6 +76,8 @@ class LandingActivity : BaseActivity() {
             R.string.drawerOpen,
             R.string.drawerClose
         )
+        //drawerToggle.isDrawerIndicatorEnabled = false
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.navigationView.setNavigationItemSelectedListener {
             onOptionsItemSelected(it)
         }
@@ -83,7 +86,7 @@ class LandingActivity : BaseActivity() {
             binding.navigationView.menu.findItem(R.id.get_pro_option).isVisible = false
 //        }
 
-        binding.drawerLayout.addDrawerListener(drawerToggle)
+        //binding.drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
         setupFab()
 

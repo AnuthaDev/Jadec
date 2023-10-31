@@ -411,15 +411,8 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         try {
             when (decompiler) {
                 "jadx" -> decompileWithJaDX(outputDexFiles, outputJavaSrcDirectory)
-
-
-                "cfr" -> {
-//                    val fl = outputJavaSrcDirectory.resolve("out.java")
-//                    fl.createNewFile()
-//                    decompileWithProcyon(outputJarFiles.listFiles()[0], fl)
-                    decompileWithProcyon(outputJarFiles, outputJavaSrcDirectory)
-                }
-                //"cfr" -> decompileWithCFR(outputJarFiles, outputJavaSrcDirectory)
+                "procyon" -> decompileWithProcyon(outputJarFiles, outputJavaSrcDirectory)
+                "cfr" -> decompileWithCFR(outputJarFiles, outputJavaSrcDirectory)
                 "fernflower" -> decompileWithFernFlower(outputJarFiles, outputJavaSrcDirectory)
             }
         } catch (e: Exception) {

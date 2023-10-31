@@ -86,18 +86,19 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             context.theme.applyStyle(R.style.LatoFontStyle, true)
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
-        if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.storagePermissionRationale),
-                Constants.STORAGE_PERMISSION_REQUEST,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            init(savedInstanceState)
+            if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.storagePermissionRationale),
+                    Constants.STORAGE_PERMISSION_REQUEST,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                init(savedInstanceState)
+            } else {
+                init(savedInstanceState)
+                postPermissionsGrant()
+            }
         } else {
-            init(savedInstanceState)
-            postPermissionsGrant()
-        }}else{
             init(savedInstanceState)
             postPermissionsGrant()
         }
@@ -219,9 +220,17 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.bug_report_option -> {
-                val uri = Uri.parse("https://github.com/thesourceofcode/jadec/issues")
-                startActivity(Intent(Intent.ACTION_VIEW, uri))
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = Uri.parse("mailto:") // Only email apps handle this.
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf("thesourceofcode@gmail.com"))
+                    putExtra(Intent.EXTRA_SUBJECT, "Bug in Jadec")
+                    putExtra(Intent.EXTRA_TEXT, "Hello! I found a bug in your app \n <Describe your problem>")
+                }
+                if (intent.resolveActivity(packageManager) != null) {
+                    startActivity(intent)
+                }else{
+                    Toast.makeText(this, "You don't have an email app :-)", Toast.LENGTH_SHORT).show()
+                }
                 return true
             }
             R.id.settings_option -> {

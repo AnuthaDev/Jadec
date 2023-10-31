@@ -35,7 +35,6 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/appName"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/navbar_header"
         android:layout_alignParentLeft="true" />
 
     <TextView

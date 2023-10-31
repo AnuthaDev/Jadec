@@ -26,7 +26,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/appName"
-            android:src="@drawable/showjava_logo" />
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:layout_width="wrap_content"

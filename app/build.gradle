@@ -29,7 +29,7 @@ apply plugin: "com.google.firebase.firebase-perf"
 
 def versionMajor = 0
 def versionMinor = 0
-def versionPatch = 1
+def versionPatch = 2
 def versionBuild = 0
 
 def getGitHash = { ->
@@ -83,7 +83,7 @@ android {
         proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 
         resValue "string", "appName", "Jadec"
-        resValue "string", "appNameGetPro", "Get Show Java Pro"
+        resValue "string", "appNameGetPro", "Get Jadec Pro"
         resValue "string", "appVersion", android.defaultConfig.versionName
         resValue "string", "appVersionExtended", "Version ${android.defaultConfig.versionName}"
         resValue "string", "appVersionExtendedWithHash", "Version ${android.defaultConfig.versionName} (${getGitHash()})"

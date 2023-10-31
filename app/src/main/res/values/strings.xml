@@ -88,18 +88,21 @@
     <string name="buyNow">Buy Now</string>
 
     <string-array name="decompilers" translatable="false">
+        <item><xliff:g>Procyon 0.6.0</xliff:g></item>
         <item><xliff:g>CFR 0.152</xliff:g></item>
-        <item><xliff:g>JaDX 0.9.0</xliff:g></item>
-        <item><xliff:g>FernFlower a0a8f0a</xliff:g></item>
+        <item><xliff:g>JaDX 1.4.7</xliff:g></item>
+        <item><xliff:g>FernFlower 630c1292</xliff:g></item>
     </string-array>
 
     <string-array name="decompilersValues" translatable="false">
+        <item><xliff:g>procyon</xliff:g></item>
         <item><xliff:g>cfr</xliff:g></item>
         <item><xliff:g>jadx</xliff:g></item>
         <item><xliff:g>fernflower</xliff:g></item>
     </string-array>
 
     <string-array name="decompilerDescriptions">
+        <item><xliff:g>Very accurate but slower decompiler</xliff:g></item>
         <item><xliff:g>A fast decompiler that can decompile modern Java features up to and including much of Java 9, 10 and beyond</xliff:g></item>
         <item><xliff:g>A decompiler optimised for working with Android dex/apk files</xliff:g></item>
         <item><xliff:g>The first working analytical decompiler for Java</xliff:g></item>

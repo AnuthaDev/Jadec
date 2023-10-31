@@ -83,7 +83,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/waitingToStart"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/grey_400" />
+            android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/statusTitle"
