@@ -65,6 +65,11 @@
 
 -keep public class * extends java.lang.Exception
 
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+-keep class **.R$*
 -dontwarn com.google.**
 -dontwarn com.android.**
 -dontwarn antlr.debug.**
