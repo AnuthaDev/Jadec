@@ -20,6 +20,7 @@ package com.thesourceofcode.jadec.activities.explorer.viewer
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -64,6 +65,8 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         val packageName = extras?.getString("name")
 
         toolbar.popupTheme = R.style.AppTheme_DarkPopupOverlay
+        toolbar.setBackgroundColor(Color.parseColor("#222222"))
+
 
         supportActionBar?.title = file.name
         val subtitle = file.canonicalPath.replace(
