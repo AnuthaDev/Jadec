@@ -174,7 +174,6 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
     @Throws(Exception::class)
     private fun convertJarToDex() {
         cleanMemory()
-
         com.android.dx.command.dexer.Main.main(
             arrayOf(
                 "--output",
