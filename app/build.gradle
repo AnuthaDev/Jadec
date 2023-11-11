@@ -220,7 +220,7 @@ dependencies {
 
     // CFR Decompiler
     implementation 'org.benf:cfr:0.152'
-    implementation 'com.google.android.gms:play-services-ads-lite:22.4.0'
+    implementation 'com.google.android.gms:play-services-ads-lite:22.5.0'
 
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
@@ -241,6 +241,9 @@ dependencies {
     implementation files("libs/procyon-compilertools.jar")
     implementation files("libs/procyon-core.jar")
 
+    implementation files("libs/arsc-1.2.5.jar")
+
+
 
 
 
@@ -258,7 +261,7 @@ dependencies {
     // implementation "ch.qos.logback:logback-core:1.2.3"
 
     // APK parser
-    implementation 'net.dongliu:apk-parser:2.6.9'
+//    implementation 'net.dongliu:apk-parser:2.6.9'
 
     // Fernflower decompiler
 //    implementation "com.github.fesh0r:fernflower:e19aab61ce"

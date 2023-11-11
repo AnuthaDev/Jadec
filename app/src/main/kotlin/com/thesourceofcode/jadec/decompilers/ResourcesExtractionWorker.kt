@@ -26,6 +26,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.Data
 import androidx.work.ListenableWorker
+import com.reandroid.apk.APKLogger
+import com.reandroid.apk.ApkModule
+import com.reandroid.apk.ApkModuleXmlDecoder
 import com.thesourceofcode.jadec.R
 import com.thesourceofcode.jadec.data.PackageInfo
 import com.thesourceofcode.jadec.data.SourceInfo
@@ -33,11 +36,11 @@ import com.thesourceofcode.jadec.utils.ktx.cleanMemory
 import com.thesourceofcode.jadec.utils.ktx.toFile
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
-import net.dongliu.apk.parser.AbstractApkFile
-import net.dongliu.apk.parser.ApkFile
-import net.dongliu.apk.parser.exception.ParserException
-import net.dongliu.apk.parser.struct.resource.ResourcePackage
-import net.dongliu.apk.parser.struct.resource.ResourceTable
+//import net.dongliu.apk.parser.AbstractApkFile
+//import net.dongliu.apk.parser.ApkFile
+//import net.dongliu.apk.parser.exception.ParserException
+//import net.dongliu.apk.parser.struct.resource.ResourcePackage
+//import net.dongliu.apk.parser.struct.resource.ResourceTable
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import timber.log.Timber
@@ -50,7 +53,7 @@ import java.util.zip.ZipFile
 
 class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
-    private lateinit var parsedInputApkFile: ApkFile
+//    private lateinit var parsedInputApkFile: ApkFile
     private val images = listOf("jpg", "png", "gif", "jpeg", "webp", "tiff", "bmp")
 
     /**
@@ -80,27 +83,62 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
      */
     @Throws(Exception::class)
     private fun extractResourcesWithParser() {
-        cleanMemory()
-        writeManifest()
-        val zipFile = ZipFile(inputPackageFile)
-        val entries = zipFile.entries()
-        while (entries.hasMoreElements()) {
-            val zipEntry = entries.nextElement()
+//        cleanMemory()
+//        writeManifest()
+//        val zipFile = ZipFile(inputPackageFile)
+//        val entries = zipFile.entries()
+//        while (entries.hasMoreElements()) {
+//            val zipEntry = entries.nextElement()
+//
+//            try {
+//                if (!zipEntry.isDirectory && zipEntry.name != "AndroidManifest.xml") {
+//                    sendStatus(zipEntry.name)
+//                    if (FilenameUtils.isExtension(zipEntry.name, "xml") && !zipEntry.name.startsWith("assets")) {
+//                        writeXML(zipEntry.name)
+//                    } else if (FilenameUtils.isExtension(zipEntry.name, images) || zipEntry.name.startsWith("assets")) {
+//                        writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
+//                    }
+//                }
+//            } catch (e: java.lang.Exception) {
+//                sendStatus("Skipped ${zipEntry.name}")
+//            }
+//        }
+//        zipFile.close()
 
-            try {
-                if (!zipEntry.isDirectory && zipEntry.name != "AndroidManifest.xml") {
-                    sendStatus(zipEntry.name)
-                    if (FilenameUtils.isExtension(zipEntry.name, "xml") && !zipEntry.name.startsWith("assets")) {
-                        writeXML(zipEntry.name)
-                    } else if (FilenameUtils.isExtension(zipEntry.name, images) || zipEntry.name.startsWith("assets")) {
-                        writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
-                    }
+        val apkmodule = ApkModule.loadApkFile(inputPackageFile)
+        val xmlDecoder = ApkModuleXmlDecoder(apkmodule)
+        xmlDecoder.setApkLogger(object:APKLogger{
+            override fun logMessage(p0: String?) {
+                if (p0 != null) {
+                    sendStatus(p0)
                 }
-            } catch (e: java.lang.Exception) {
-                sendStatus("Skipped ${zipEntry.name}")
             }
-        }
-        zipFile.close()
+
+            override fun logError(p0: String?, p1: Throwable?) {
+                if (p0 != null) {
+                    sendStatus(p0)
+                }
+            }
+
+            override fun logVerbose(p0: String?) {
+                if (p0 != null) {
+                    sendStatus(p0)
+                }
+            }
+
+        })
+        xmlDecoder.setKeepResPath(false)
+        xmlDecoder.decodeResourceTable(outputSrcDirectory)
+        xmlDecoder.decodeAndroidManifest(outputSrcDirectory.parentFile)
+        xmlDecoder.decodeUncompressedFiles(outputSrcDirectory)
+
+
+
+//        xmlDecoder.decodeUncompressedFiles(outputSrcDirectory)
+//        xmlDecoder.decodeDexFiles(outputSrcDirectory)
+
+
+
     }
 
     /**
@@ -110,26 +148,26 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
      *
      * @experimental
      */
-    @Suppress("UNCHECKED_CAST")
-    @RequiresApi(Build.VERSION_CODES.N)
-    @Throws(Exception::class)
-    private fun loadResourcesTable() {
-        cleanMemory()
-        val resourceTableField = AbstractApkFile::class.java.getDeclaredField("resourceTable")
-        resourceTableField.isAccessible = true
-        val resourceTable = resourceTableField.get(parsedInputApkFile) as ResourceTable
-        val packageMapField = resourceTable.javaClass.getDeclaredField("packageMap")
-        packageMapField.isAccessible = true
-        val packageMap = packageMapField.get(resourceTable) as Map<Short, ResourcePackage>
-        packageMap.forEach { _, u ->
-            Timber.d("[res] ID: ${u.id} Name: ${u.name}")
-            u.typesMap.forEach { _, iu ->
-                iu.forEach {
-                    Timber.d("[res] Inner ID: ${it.id} Inner Name: ${it.name}")
-                }
-            }
-        }
-    }
+//    @Suppress("UNCHECKED_CAST")
+//    @RequiresApi(Build.VERSION_CODES.N)
+//    @Throws(Exception::class)
+//    private fun loadResourcesTable() {
+//        cleanMemory()
+//        val resourceTableField = AbstractApkFile::class.java.getDeclaredField("resourceTable")
+//        resourceTableField.isAccessible = true
+//        val resourceTable = resourceTableField.get(parsedInputApkFile) as ResourceTable
+//        val packageMapField = resourceTable.javaClass.getDeclaredField("packageMap")
+//        packageMapField.isAccessible = true
+//        val packageMap = packageMapField.get(resourceTable) as Map<Short, ResourcePackage>
+//        packageMap.forEach { _, u ->
+//            Timber.d("[res] ID: ${u.id} Name: ${u.name}")
+//            u.typesMap.forEach { _, iu ->
+//                iu.forEach {
+//                    Timber.d("[res] Inner ID: ${it.id} Inner Name: ${it.name}")
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Write a file at the appropriate output path within the source directory
@@ -152,38 +190,38 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     /**
      * Read and decompile an XML resource from the APK and write it to the source directory.
      */
-    @Throws(ParserException::class)
-    private fun writeXML(path: String) {
-        val xml = parsedInputApkFile.transBinaryXml(path)
-        val fileFolderPath =
-            outputSrcDirectory.canonicalPath + "/" + path.replace(
-                FilenameUtils.getName(
-                    path
-                ), ""
-            )
-        val fileFolder = File(fileFolderPath)
-        if (!fileFolder.exists() || !fileFolder.isDirectory) {
-            fileFolder.mkdirs()
-        }
-        FileUtils.writeStringToFile(
-            File(fileFolderPath + FilenameUtils.getName(path)),
-            xml,
-            Charset.defaultCharset()
-        )
-    }
+//    @Throws(ParserException::class)
+//    private fun writeXML(path: String) {
+//        val xml = parsedInputApkFile.transBinaryXml(path)
+//        val fileFolderPath =
+//            outputSrcDirectory.canonicalPath + "/" + path.replace(
+//                FilenameUtils.getName(
+//                    path
+//                ), ""
+//            )
+//        val fileFolder = File(fileFolderPath)
+//        if (!fileFolder.exists() || !fileFolder.isDirectory) {
+//            fileFolder.mkdirs()
+//        }
+//        FileUtils.writeStringToFile(
+//            File(fileFolderPath + FilenameUtils.getName(path)),
+//            xml,
+//            Charset.defaultCharset()
+//        )
+//    }
 
     /**
      * Write the AndroidManifest file to the source directory
      */
-    @Throws(Exception::class)
-    private fun writeManifest() {
-        val manifestXml = parsedInputApkFile.manifestXml
-        FileUtils.writeStringToFile(
-            workingDirectory.resolve("AndroidManifest.xml"),
-            manifestXml,
-            Charset.defaultCharset()
-        )
-    }
+//    @Throws(Exception::class)
+//    private fun writeManifest() {
+//        val manifestXml = parsedInputApkFile.manifestXml
+//        FileUtils.writeStringToFile(
+//            workingDirectory.resolve("AndroidManifest.xml"),
+//            manifestXml,
+//            Charset.defaultCharset()
+//        )
+//    }
 
     /**
      * Get bitmap from drawable. This is used to read the app icon and save to the source directory.
@@ -238,7 +276,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
             .setPackageName(packageName)
 
         if (type == PackageInfo.Type.APK) {
-            parsedInputApkFile = ApkFile(inputPackageFile)
+//            parsedInputApkFile = ApkFile(inputPackageFile)
             try {
                 extractResourcesWithParser()
                 saveIcon()
