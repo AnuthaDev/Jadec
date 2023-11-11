@@ -48,13 +48,20 @@ class FileItem() : Parcelable {
                 return R.drawable.type_folder
             }
             var extension = FilenameUtils.getExtension(file.name) ?: return R.drawable.type_file
-            extension = if (extension === "jpeg") "jpg" else extension
-            return try {
-                val res = R.drawable::class.java
-                val drawableField = res.getField("type_$extension")
-                drawableField.getInt(null)
-            } catch (e: Exception) {
-                R.drawable.type_file
+            extension = if (extension === "jpeg") "jpg" else extension.lowercase()
+            return when (extension) {
+                "css" -> R.drawable.type_css
+                "html" -> R.drawable.type_html
+                "jar" -> R.drawable.type_jar
+                "java" -> R.drawable.type_java
+                "js" -> R.drawable.type_javascript
+                "jpg" -> R.drawable.type_jpg
+                "json" -> R.drawable.type_json
+                "png" -> R.drawable.type_png
+                "txt" -> R.drawable.type_txt
+                "xml" -> R.drawable.type_xml
+                "zip" -> R.drawable.type_zip
+                else -> R.drawable.type_file
             }
         }
 
