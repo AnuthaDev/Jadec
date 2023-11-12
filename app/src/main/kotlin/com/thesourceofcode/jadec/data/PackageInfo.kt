@@ -21,14 +21,21 @@ package com.thesourceofcode.jadec.data
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import com.thesourceofcode.jadec.utils.Identicon
 import com.thesourceofcode.jadec.utils.ktx.getVersion
 import com.thesourceofcode.jadec.utils.ktx.isSystemPackage
 import com.thesourceofcode.jadec.utils.ktx.jarPackageName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import java.io.File
-import java.lang.NullPointerException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 
 /**
  * [PackageInfo] holds information about an apk/jar/dex file in preparation for sending it for
@@ -43,6 +50,7 @@ class PackageInfo() : Parcelable {
     var icon: Drawable? = null
     var type = Type.APK
     var isSystemPackage = false
+    var isExternalPackage = false
 
     constructor(parcel: Parcel) : this() {
         label = parcel.readString()!!
@@ -51,16 +59,18 @@ class PackageInfo() : Parcelable {
         filePath = parcel.readString()!!
         type = Type.values()[parcel.readInt()]
         isSystemPackage = parcel.readInt() == 1
+        isExternalPackage = parcel.readInt() == 1
         file = File(filePath)
     }
 
-    constructor(label: String, name: String, version: String, filePath: String, type: Type, isSystemPackage: Boolean = false) : this() {
+    constructor(label: String, name: String, version: String, filePath: String, type: Type, isSystemPackage: Boolean = false, isExternalPackage: Boolean = false) : this() {
         this.label = label
         this.name = name
         this.version = version
         this.filePath = filePath
         this.type = type
         this.isSystemPackage = isSystemPackage
+        this.isExternalPackage = isExternalPackage
         file = File(filePath)
     }
 
@@ -76,6 +86,7 @@ class PackageInfo() : Parcelable {
         parcel.writeString(filePath)
         parcel.writeInt(type.ordinal)
         parcel.writeInt(if (isSystemPackage) 1 else 0)
+        parcel.writeInt(if (isExternalPackage) 1 else 0)
     }
 
     fun loadIcon(context: Context): Drawable {
@@ -118,7 +129,7 @@ class PackageInfo() : Parcelable {
         /**
          * Get [PackageInfo] for an apk using the [context] and the [file].
          */
-        private fun fromApk(context: Context, file: File): PackageInfo? {
+        private fun fromApk(context: Context, file: File, isExternalPackage: Boolean = false): PackageInfo? {
             val pack = context.packageManager.getPackageArchiveInfo(file.canonicalPath, 0)
             return PackageInfo(
                 pack!!.applicationInfo.loadLabel(context.packageManager).toString(),
@@ -126,28 +137,30 @@ class PackageInfo() : Parcelable {
                 getVersion(pack),
                 file.canonicalPath,
                 Type.APK,
-                isSystemPackage(pack)
+                isSystemPackage(pack),
+                isExternalPackage
             )
         }
 
         /**
          * Get [PackageInfo] for a jar from the [file].
          */
-        private fun fromJar(file: File, type: Type = Type.JAR): PackageInfo? {
+        private fun fromJar(file: File, type: Type = Type.JAR, isExternalPackage: Boolean = false): PackageInfo? {
             return PackageInfo(
                 file.name,
                 jarPackageName(file.name),
                 (System.currentTimeMillis() / 1000).toString(),
                 file.canonicalPath,
-                type
+                type,
+                isExternalPackage = isExternalPackage
             )
         }
 
         /**
          * Get [PackageInfo] for a dex from the [file].
          */
-        private fun fromDex(file: File): PackageInfo? {
-            return fromJar(file, Type.DEX)
+        private fun fromDex(file: File, isExternalPackage: Boolean = false): PackageInfo? {
+            return fromJar(file, Type.DEX, isExternalPackage)
         }
 
 
@@ -167,6 +180,44 @@ class PackageInfo() : Parcelable {
             }
         }
 
+        suspend fun fromUri(context: Context, uri: Uri, fileName: String): PackageInfo? {
+
+            val tempFile = File(context.cacheDir, fileName)
+            context.contentResolver.openInputStream(uri).use { inputStream ->
+                if (inputStream != null) {
+                    copy(inputStream, tempFile)
+                }
+                tempFile
+            }
+            return try {
+                when(fileName!!.substring(fileName.lastIndexOf(".") + 1)) {
+                    "apk" -> fromApk(context, tempFile, true)
+                    "jar" -> fromJar(tempFile, isExternalPackage = true)
+                    "dex", "odex" -> fromDex(tempFile, true)
+                    else -> null
+                }
+            } catch (e: NullPointerException) {
+                null
+            }
+        }
+        @Throws(IOException::class)
+        suspend fun copy(src: InputStream, dst: File) {
+            withContext(Dispatchers.IO) {
+                FileOutputStream(dst).use { output ->
+
+                    val buffer = ByteArray(10240)
+                    var len: Int = src.read(buffer)
+                    var readBytes = len
+                    while (len > 0) {
+                        yield()
+                        output.write(buffer, 0, len)
+                        len = src.read(buffer)
+                        readBytes += len
+                    }
+                }
+            }
+            delay(500)
+        }
         override fun createFromParcel(parcel: Parcel): PackageInfo {
             return PackageInfo(parcel)
         }

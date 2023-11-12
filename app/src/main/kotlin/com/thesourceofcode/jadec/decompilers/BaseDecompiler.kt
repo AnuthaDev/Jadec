@@ -61,6 +61,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val packageName = data.getString("name").toString()
     protected val packageLabel = data.getString("label").toString()
 
+    protected val isExternalPackage = data.getBoolean("isExternalPackage", false)
+
+
     protected val keepIntermediateFiles = data.getBoolean("keepIntermediateFiles", UserPreferences.DEFAULTS.KEEP_INTERMEDIATE_FILES)
 
     protected val workingDirectory: File = appStorage.resolve("sources/$packageName/")
@@ -226,6 +229,12 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      * Clear notifications and show a success notification.
      */
     fun onCompleted() {
+        if (isExternalPackage) {
+            val tempFile = File(context.cacheDir, inputPackageFile.toString().substring(inputPackageFile.toString().lastIndexOf("/") + 1))
+            if (tempFile.exists()) {
+                tempFile.delete()
+            }
+        }
         processNotifier?.success()
         broadcastStatus(
             context.getString(R.string.appHasBeenDecompiled, packageLabel),

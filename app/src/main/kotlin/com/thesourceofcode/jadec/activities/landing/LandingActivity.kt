@@ -18,16 +18,23 @@
 
 package com.thesourceofcode.jadec.activities.landing
 
+//import kotlinx.android.synthetic.main.activity_landing.*
+
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.view.MenuItem
+import android.provider.DocumentsContract
+import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
@@ -47,7 +54,8 @@ import com.thesourceofcode.jadec.utils.Ads
 import com.thesourceofcode.jadec.utils.secure.PurchaseUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-//import kotlinx.android.synthetic.main.activity_landing.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 
@@ -151,6 +159,47 @@ class LandingActivity : BaseActivity() {
 //            binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
         }
     }
+    @SuppressLint("Range")
+    var startActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.getResultCode() === RESULT_OK) {
+            val data: Intent? = result.data
+            val uri = data?.data
+            var fileName: String? = null
+            if (uri!!.scheme == "content") {
+                val cursor = contentResolver.query(uri, null, null, null, null)
+                try {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        fileName =
+                            cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    }
+                } finally {
+                    cursor!!.close()
+                }
+            }
+            if (fileName == null) {
+                fileName = uri.path
+                val mark = fileName!!.lastIndexOf("/")
+                if (mark != -1) {
+                    fileName = fileName.substring(mark + 1)
+                }
+            }
+            val extension = fileName!!.substring(fileName.lastIndexOf(".") + 1)
+            Toast.makeText(this@LandingActivity, "Loading File", Toast.LENGTH_LONG).show()
+
+            lifecycleScope.launch {
+                PackageInfo.fromUri(context, uri, fileName)?.let {
+                    val i = Intent(context, DecompilerActivity::class.java)
+                    i.putExtra("packageInfo", it)
+                    startActivity(i)
+                }
+            }
+
+        } else {
+            Toast.makeText(this@LandingActivity, "No file chosen", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     private fun setupFab() {
         binding.selectionFab.addOnMenuItemClickListener { _, _, itemId ->
@@ -161,18 +210,24 @@ class LandingActivity : BaseActivity() {
                     )
                 }
                 R.id.action_pick_sdcard -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-                        Toast.makeText(this, "Operation not currently supported", Toast.LENGTH_SHORT).show()
-                    }else {
                         pickFile()
-                    }
                 }
             }
         }
     }
 
     private fun pickFile() {
-        filePickerDialog.show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            Toast.makeText(this, "May be buggy", Toast.LENGTH_SHORT).show()
+            var data = Intent(Intent.ACTION_GET_CONTENT)
+            data.type = "*/*"
+            data = Intent.createChooser(data, "Choose a file")
+            startActivityResultLauncher.launch(data)
+
+
+        }else {
+            filePickerDialog.show()
+        }
     }
 
     override fun postPermissionsGrant() {

@@ -46,6 +46,7 @@ import com.thesourceofcode.jadec.databinding.ActivityDecompilerProcessBinding
 import com.thesourceofcode.jadec.utils.ktx.sourceDir
 import com.thesourceofcode.jadec.workers.DecompilerWorker
 import timber.log.Timber
+import java.io.File
 
 
 class DecompilerProcessActivity : BaseActivity() {
@@ -92,6 +93,13 @@ class DecompilerProcessActivity : BaseActivity() {
 
         binding.cancelButton.setOnClickListener {
             DecompilerWorker.cancel(context, packageInfo.name)
+            if (packageInfo.isExternalPackage){
+                val tempFile = File(context.cacheDir, packageInfo.filePath.toString().substring(packageInfo.filePath.toString().lastIndexOf("/") + 1))
+                if (tempFile.exists()) {
+                    tempFile.delete()
+                }
+
+            }
             finish()
         }
 

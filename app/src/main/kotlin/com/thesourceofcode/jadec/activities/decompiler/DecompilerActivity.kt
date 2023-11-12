@@ -208,7 +208,8 @@ class DecompilerActivity : BaseActivity() {
             "name" to packageInfo.name,
             "label" to packageInfo.label,
             "inputPackageFile" to packageInfo.filePath,
-            "type" to packageInfo.type.ordinal
+            "type" to packageInfo.type.ordinal,
+            "isExternalPackage" to packageInfo.isExternalPackage
         )
 
         BaseDecompiler.start(inputMap)
