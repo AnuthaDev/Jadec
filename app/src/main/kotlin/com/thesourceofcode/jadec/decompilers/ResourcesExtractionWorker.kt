@@ -83,7 +83,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
      */
     @Throws(Exception::class)
     private fun extractResourcesWithParser() {
-//        cleanMemory()
+        cleanMemory()
 //        writeManifest()
 //        val zipFile = ZipFile(inputPackageFile)
 //        val entries = zipFile.entries()
@@ -128,17 +128,8 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
         })
         xmlDecoder.setKeepResPath(false)
-        xmlDecoder.decodeResourceTable(outputSrcDirectory)
         xmlDecoder.decodeAndroidManifest(outputSrcDirectory.parentFile)
-        xmlDecoder.decodeUncompressedFiles(outputSrcDirectory)
-
-
-
-//        xmlDecoder.decodeUncompressedFiles(outputSrcDirectory)
-//        xmlDecoder.decodeDexFiles(outputSrcDirectory)
-
-
-
+        xmlDecoder.decodeResourceTable(outputSrcDirectory)
     }
 
     /**

@@ -17,141 +17,126 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.decompiler.DecompilerProcessActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar" />
+    <include layout="@layout/layout_toolbar" />
 
     <include
         android:id="@+id/decompilerItemCard"
-        android:layout_below="@id/toolbar"
         layout="@layout/layout_pick_decompiler_list_item"
+        android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_width="match_parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <LinearLayout
-        android:id="@+id/statusTextLayout"
-        android:layout_width="fill_parent"
+
+    <ImageView
+        android:id="@+id/leftProgressGear"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:gravity="center_horizontal"
+        android:layout_marginEnd="20dp"
+        android:contentDescription="@string/loadingGear"
+        app:layout_constraintBottom_toTopOf="@id/adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_gear_grey" />
+
+
+    <ImageView
+        android:id="@+id/rightProgressGear"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="-15dp"
+        android:contentDescription="@string/loadingGear"
+        app:layout_constraintBottom_toBottomOf="@id/leftProgressGear"
+        app:layout_constraintStart_toEndOf="@id/leftProgressGear"
+        app:srcCompat="@drawable/ic_gear_grey" />
+
+    <TextView
+        android:id="@+id/inputPackageLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:layout_alignParentLeft="true">
+        android:text="@string/waitingToStart"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/leftProgressGear" />
 
-        <RelativeLayout
-            android:layout_width="130dp"
-            android:layout_height="100dp"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/statusTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/processing"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/grey_400"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputPackageLabel" />
 
-            <ImageView
-                android:id="@+id/leftProgressGear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="7dp"
-                android:contentDescription="@string/loadingGear"
-                app:srcCompat="@drawable/ic_gear_grey" />
-
-            <ImageView
-                android:id="@+id/rightProgressGear"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:contentDescription="@string/loadingGear"
-                app:srcCompat="@drawable/ic_gear_grey" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/inputPackageLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/waitingToStart"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="?android:attr/textColorSecondary" />
-
-        <TextView
-            android:id="@+id/statusTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/processing"
-            android:textAllCaps="false"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/grey_400" />
-
-        <TextView
-            android:id="@+id/statusText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ellipsize="none"
-            android:singleLine="false"
-            android:text="@string/gettingReady"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/grey_400" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ellipsize="none"
+        android:singleLine="false"
+        android:text="@string/gettingReady"
+        android:textAllCaps="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/grey_400"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusTitle" />
 
     <TextView
         android:id="@+id/memoryUsage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/memoryStatus"
-        android:layout_centerHorizontal="true"
+        android:text="@string/memoryUsage"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/grey_400"
-        android:text="@string/memoryUsage" />
+        app:layout_constraintBottom_toTopOf="@id/memoryStatus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/memoryStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/cancelButton"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_marginBottom="8dp"
+        android:text="@string/zeroPercentage"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/grey_400"
-        android:text="@string/zeroPercentage" />
+        app:layout_constraintBottom_toTopOf="@id/cancelButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/cancelButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adViewHolder"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp"
         android:text="@string/cancel"
-        android:textColor="@color/grey_400" />
+        android:textColor="@color/grey_400"
+        app:layout_constraintBottom_toTopOf="@id/adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/adViewHolder"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include
-            android:id="@+id/adView"
-            layout="@layout/layout_admob" />
-    </FrameLayout>
 
-</RelativeLayout>
+    <include layout="@layout/layout_admob" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

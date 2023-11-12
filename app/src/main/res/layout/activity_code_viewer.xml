@@ -17,33 +17,36 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/holder"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include
-        android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
     <com.thesourceofcode.jadec.utils.views.CodeView
         android:id="@+id/codeView"
         android:visibility="invisible"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/adView"
-        android:layout_below="@+id/toolbar">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/adView">
     </com.thesourceofcode.jadec.utils.views.CodeView>
 
     <ProgressBar
         android:id="@+id/codeLoadProgress"
         style="?android:attr/progressBarStyle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/adView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="wrap_content" />
 
     <include
-        android:id="@+id/adView"
         layout="@layout/layout_admob" />
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

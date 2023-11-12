@@ -70,20 +70,20 @@ class LandingActivity : BaseActivity() {
         binding = ActivityLandingBinding.inflate(layoutInflater)
         val view = binding.root
         setupLayout(view)
-        drawerToggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            R.string.drawerOpen,
-            R.string.drawerClose
-        )
+//        drawerToggle = ActionBarDrawerToggle(
+//            this,
+//            binding.drawerLayout,
+//            R.string.drawerOpen,
+//            R.string.drawerClose
+//        )
         //drawerToggle.isDrawerIndicatorEnabled = false
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        binding.navigationView.setNavigationItemSelectedListener {
-            onOptionsItemSelected(it)
-        }
+//        binding.navigationView.setNavigationItemSelectedListener {
+//            onOptionsItemSelected(it)
+//        }
 
 //        if (!isPro()) {
-            binding.navigationView.menu.findItem(R.id.get_pro_option).isVisible = false
+//            binding.navigationView.menu.findItem(R.id.get_pro_option).isVisible = false
 //        }
 
         //binding.drawerLayout.addDrawerListener(drawerToggle)
@@ -131,7 +131,7 @@ class LandingActivity : BaseActivity() {
             if (isPro()) {
                 supportActionBar?.title = "${getString(R.string.appName)} Pro"
                 findViewById<AdView>(R.id.adView)?.visibility = View.GONE
-                binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
+//                binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
             }
         }
 //        purchaseUtils.initializeCheckout(false, true)
@@ -148,7 +148,7 @@ class LandingActivity : BaseActivity() {
         if (isPro()) {
             supportActionBar?.title = "${getString(R.string.appName)} Pro"
             findViewById<AdView>(R.id.adView)?.visibility = View.GONE
-            binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
+//            binding.navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
         }
     }
 
@@ -234,22 +234,7 @@ class LandingActivity : BaseActivity() {
         bundle.putParcelableArrayList("historyItems", historyItems)
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        drawerToggle.syncState()
-    }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        drawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

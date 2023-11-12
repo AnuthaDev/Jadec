@@ -6,7 +6,6 @@
     tools:context="com.thesourceofcode.jadec.activities.about.AboutActivity">
 
     <include
-        android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
 
@@ -15,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@id/toolbar"
         android:orientation="vertical"
         android:paddingBottom="16dp"
         android:paddingTop="16dp">
