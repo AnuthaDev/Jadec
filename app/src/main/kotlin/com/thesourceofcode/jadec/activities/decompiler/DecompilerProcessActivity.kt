@@ -243,6 +243,12 @@ class DecompilerProcessActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (packageInfo.isExternalPackage){
+            val tempFile = File(context.cacheDir, packageInfo.filePath.substring(packageInfo.filePath.lastIndexOf("/") + 1))
+            if (tempFile.exists()) {
+                tempFile.delete()
+            }
+        }
         unregisterReceiver(progressReceiver)
     }
 }

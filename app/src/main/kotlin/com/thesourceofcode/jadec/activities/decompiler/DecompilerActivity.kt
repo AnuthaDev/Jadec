@@ -62,6 +62,8 @@ class DecompilerActivity : BaseActivity() {
     private lateinit var packageInfo: PackageInfo
 
     private lateinit var binding: ActivityDecompilerBinding
+
+    private var startedCompilation = false
     @SuppressLint("SetTextI18n")
     override fun init(savedInstanceState: Bundle?) {
         binding = ActivityDecompilerBinding.inflate(layoutInflater)
@@ -164,6 +166,16 @@ class DecompilerActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        if (packageInfo.isExternalPackage && !startedCompilation){
+            val tempFile = File(context.cacheDir, packageInfo.filePath.substring(packageInfo.filePath.lastIndexOf("/") + 1))
+            if (tempFile.exists()) {
+                tempFile.delete()
+            }
+        }
+        super.onDestroy()
+    }
+
     override fun onResume() {
         super.onResume()
         assertSourceExistence()
@@ -213,6 +225,8 @@ class DecompilerActivity : BaseActivity() {
         )
 
         BaseDecompiler.start(inputMap)
+
+        startedCompilation = true
 
         firebaseAnalytics.logEvent(
             Constants.EVENTS.SELECT_DECOMPILER, hashMapOf(

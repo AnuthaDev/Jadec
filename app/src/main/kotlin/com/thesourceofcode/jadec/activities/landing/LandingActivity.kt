@@ -21,16 +21,14 @@ package com.thesourceofcode.jadec.activities.landing
 //import kotlinx.android.synthetic.main.activity_landing.*
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -55,7 +53,6 @@ import com.thesourceofcode.jadec.utils.secure.PurchaseUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 
@@ -185,13 +182,18 @@ class LandingActivity : BaseActivity() {
                     fileName = fileName.substring(mark + 1)
                 }
             }
-            val extension = fileName!!.substring(fileName.lastIndexOf(".") + 1)
-            Toast.makeText(this@LandingActivity, "Loading File", Toast.LENGTH_LONG).show()
+            val extension = fileName.substring(fileName.lastIndexOf(".") + 1)
 
+            val copyDialog = ProgressDialog(this)
+            copyDialog.setTitle("Please Wait!")
+            copyDialog.setMessage("Copying file to Cache")
+            copyDialog.setCancelable(false)
+            copyDialog.show()
             lifecycleScope.launch {
                 PackageInfo.fromUri(context, uri, fileName)?.let {
                     val i = Intent(context, DecompilerActivity::class.java)
                     i.putExtra("packageInfo", it)
+                    copyDialog.hide()
                     startActivity(i)
                 }
             }
@@ -218,7 +220,6 @@ class LandingActivity : BaseActivity() {
 
     private fun pickFile() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-            Toast.makeText(this, "May be buggy", Toast.LENGTH_SHORT).show()
             var data = Intent(Intent.ACTION_GET_CONTENT)
             data.type = "*/*"
             data = Intent.createChooser(data, "Choose a file")
