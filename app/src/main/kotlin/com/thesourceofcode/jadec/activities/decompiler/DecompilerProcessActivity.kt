@@ -170,15 +170,23 @@ class DecompilerProcessActivity : BaseActivity() {
                     finish()
                 }
                 hasPassed -> {
-                    val intent = Intent(context, NavigatorActivity::class.java)
-                    intent.putExtra("selectedApp", SourceInfo.from(
-                        sourceDir(
-                            packageInfo.name
+                    try {
+                        val intent = Intent(context, NavigatorActivity::class.java)
+
+                        intent.putExtra(
+                            "selectedApp", SourceInfo.from(
+                                sourceDir(
+                                    packageInfo.name
+                                )
+                            )
                         )
-                    ))
-                    startActivity(intent)
-                    hasCompleted = true
-                    finish()
+                        startActivity(intent)
+                        hasCompleted = true
+                        finish()
+                    }catch (e: UninitializedPropertyAccessException){
+                        Toast.makeText(this, "Error Encountered", Toast.LENGTH_LONG).show()
+                        finish()
+                    }
                 }
                 isWaiting -> binding.statusText.text = getString(R.string.waitingToStart)
             }
