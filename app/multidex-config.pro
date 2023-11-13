@@ -1,5 +1,5 @@
--keep class com.thesourceofcode.MainApplication
--keep class com.thesourceofcode.MainApplication { *; }
+-keep class com.thesourceofcode.jadec.MainApplication
+-keep class com.thesourceofcode.jadec.MainApplication { *; }
 -keep class com.thesourceofcode.jadec.utils.logging.** { *; }
 -keep class com.thesourceofcode.jadec.test.** { *; }
 -keep class androidx.test.** { *; }
