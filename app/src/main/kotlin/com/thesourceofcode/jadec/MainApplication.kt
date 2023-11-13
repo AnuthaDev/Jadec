@@ -69,7 +69,7 @@ class MainApplication : MultiDexApplication() {
                 AppCompatDelegate.MODE_NIGHT_NO
         )
 
-        Ads(this).init()
+        //Ads(this).init()
 //        Fabric.with(this, Crashlytics())
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
 //        Crashlytics.setUserIdentifier(instanceId)
