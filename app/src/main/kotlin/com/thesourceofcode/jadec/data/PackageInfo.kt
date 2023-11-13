@@ -216,7 +216,6 @@ class PackageInfo() : Parcelable {
                     }
                 }
             }
-            delay(500)
         }
         override fun createFromParcel(parcel: Parcel): PackageInfo {
             return PackageInfo(parcel)

@@ -18,12 +18,16 @@
 
 package com.thesourceofcode.jadec.decompilers
 
+//import net.dongliu.apk.parser.AbstractApkFile
+//import net.dongliu.apk.parser.ApkFile
+//import net.dongliu.apk.parser.exception.ParserException
+//import net.dongliu.apk.parser.struct.resource.ResourcePackage
+//import net.dongliu.apk.parser.struct.resource.ResourceTable
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.reandroid.apk.APKLogger
@@ -36,19 +40,20 @@ import com.thesourceofcode.jadec.utils.ktx.cleanMemory
 import com.thesourceofcode.jadec.utils.ktx.toFile
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
-//import net.dongliu.apk.parser.AbstractApkFile
-//import net.dongliu.apk.parser.ApkFile
-//import net.dongliu.apk.parser.exception.ParserException
-//import net.dongliu.apk.parser.struct.resource.ResourcePackage
-//import net.dongliu.apk.parser.struct.resource.ResourceTable
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.IOUtils
 import timber.log.Timber
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.DataInputStream
+import java.io.DataOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.nio.charset.Charset
-import java.util.zip.ZipFile
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 
 class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
@@ -76,7 +81,54 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         jadx.load()
         jadx.saveResources()
     }
+    fun normalizeFile(f: File) {
+        var temp: File? = null
+        var bufferIn: BufferedReader? = null
+        var bufferOut: BufferedWriter? = null
+        try {
+            if (f.exists()) {
+                // Create a new temp file to write to
+                temp = File(f.absolutePath + ".normalized")
+                temp.createNewFile()
 
+                // Get a stream to read from the file un-normalized file
+                val fileIn = FileInputStream(f)
+                val dataIn = DataInputStream(fileIn)
+                bufferIn = BufferedReader(InputStreamReader(dataIn))
+
+                // Get a stream to write to the normalized file
+                val fileOut = FileOutputStream(temp)
+                val dataOut = DataOutputStream(fileOut)
+                bufferOut = BufferedWriter(OutputStreamWriter(dataOut))
+
+                // For each line in the un-normalized file
+                var line: String?
+                while (bufferIn.readLine().also { line = it } != null) {
+                    // Write the original line plus the operating-system dependent newline
+                    bufferOut.write(line)
+                    bufferOut.newLine()
+                }
+                bufferIn.close()
+                bufferOut.close()
+
+                // Remove the original file
+                f.delete()
+
+                // And rename the original file to the new one
+                temp.renameTo(f)
+            } else {
+                // If the file doesn't exist...
+                Timber.w("Could not find file to open: %s", f.absolutePath)
+            }
+        } catch (e: java.lang.Exception) {
+            Timber.w(e)
+        } finally {
+            // Clean up, temp should never exist
+            FileUtils.deleteQuietly(temp)
+            IOUtils.closeQuietly(bufferIn)
+            IOUtils.closeQuietly(bufferOut)
+        }
+    }
     /**
      * Read the APK as zip, and extract XML resources using the apk-parser and image/other resources
      * by just extracting it from the zip.
@@ -130,6 +182,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         xmlDecoder.setKeepResPath(false)
         xmlDecoder.decodeAndroidManifest(outputSrcDirectory.parentFile)
         xmlDecoder.decodeResourceTable(outputSrcDirectory)
+        outputSrcDirectory.parentFile?.let { normalizeFile(it.resolve("AndroidManifest.xml")) }
     }
 
     /**
