@@ -66,7 +66,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 26
+        minSdkVersion 19
         targetSdkVersion 33
         multiDexEnabled true
         multiDexKeepProguard file("multidex-config.pro")
@@ -107,6 +107,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -175,6 +177,9 @@ configurations.configureEach {
 dependencies {
     // Multi-dex
     implementation "androidx.multidex:multidex:2.0.1"
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.4'
+
 
     // Kotlin Standard library
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
