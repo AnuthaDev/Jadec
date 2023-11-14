@@ -115,7 +115,7 @@
     <string name="shareSource">Share source</string>
     <string name="deleteSource">Delete source</string>
     <string name="decompilerUnavailable">Decompiler Unavailable</string>
-    <string name="decompilerUnavailableExplanation">JaDX and Fernflower use newer Java features such as some types of lambda\'s which are not available on pre-N versions of Android.\n\nPlease use CFR instead.</string>
+    <string name="decompilerUnavailableExplanation">JaDX uses newer Java features which are not available before android version 5.\n\nPlease use other decompilers instead.</string>
     <string name="deleteSourceHistory">Delete source history</string>
     <string name="deleteSourceConfirm">Are you sure you want to delete the decompiled source ?</string>
     <string name="deleteSourceHistoryConfirm">Are you sure you want to delete source history ?</string>
@@ -181,7 +181,7 @@
     <string name="errorLoadingInputFile">Error loading input file</string>
     <string name="genericError">An unexpected error occurred</string>
     <string name="errorLoadingFiles">An error occurred while loading files</string>
-    <string name="decompilersUnavailable">JaDX and Fernflower decompilers are available only on android devices running Android 7.0 and above.</string>
+    <string name="decompilersUnavailable">JaDX is available only on android devices running Android 5.0 and above.</string>
     <string name="keepIntermediateFiles">Keep intermediate files</string>
     <string name="keepIntermediateFilesSummary">Do not delete dex &amp; jar files created during the decompilation</string>
 </resources>

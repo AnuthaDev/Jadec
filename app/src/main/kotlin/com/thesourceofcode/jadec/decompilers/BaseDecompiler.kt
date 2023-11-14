@@ -258,10 +258,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
          */
         fun isAvailable(decompiler: String): Boolean {
             return when (decompiler) {
-                "procyon" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                "procyon" -> true
                 "cfr" -> true
-                "jadx" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                "fernflower" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                "jadx" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                "fernflower" -> true
                 else -> false
             }
         }

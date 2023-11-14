@@ -124,7 +124,7 @@ class DecompilerActivity : BaseActivity() {
             binding.systemAppWarning.text = sb
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             binding.decompilersUnavailableNotification.visibility = View.VISIBLE
         }
 
@@ -200,15 +200,15 @@ class DecompilerActivity : BaseActivity() {
 
     private fun startProcess(view: View, decompiler: String, decompilerIndex: Int) {
 
-//        if (!isAvailable(decompiler)) {
-//            AlertDialog.Builder(context)
-//                .setTitle(getString(R.string.decompilerUnavailable))
-//                .setMessage(getString(R.string.decompilerUnavailableExplanation))
-//                .setIcon(R.drawable.ic_error_outline_black)
-//                .setNegativeButton(android.R.string.ok, null)
-//                .show()
-//            return
-//        }
+        if (!isAvailable(decompiler)) {
+            AlertDialog.Builder(context)
+                .setTitle(getString(R.string.decompilerUnavailable))
+                .setMessage(getString(R.string.decompilerUnavailableExplanation))
+                .setIcon(R.drawable.ic_error_outline_black)
+                .setNegativeButton(android.R.string.ok, null)
+                .show()
+            return
+        }
 
         val inputMap = hashMapOf(
             "shouldIgnoreLibs" to userPreferences.ignoreLibraries,
