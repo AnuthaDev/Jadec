@@ -24,12 +24,13 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+import com.reandroid.apk.ApkModule
+import com.reandroid.arsc.chunk.TableBlock
 import com.thesourceofcode.jadec.utils.Identicon
 import com.thesourceofcode.jadec.utils.ktx.getVersion
 import com.thesourceofcode.jadec.utils.ktx.isSystemPackage
 import com.thesourceofcode.jadec.utils.ktx.jarPackageName
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import java.io.File
@@ -130,17 +131,30 @@ class PackageInfo() : Parcelable {
          * Get [PackageInfo] for an apk using the [context] and the [file].
          */
         private fun fromApk(context: Context, file: File, isExternalPackage: Boolean = false): PackageInfo? {
-            val pack = context.packageManager.getPackageArchiveInfo(file.canonicalPath, 0)
+            val apkmodule = ApkModule.loadApkFile(file)
+
+
+            var packageBlock = apkmodule.androidManifestBlock.packageBlock
+            if (packageBlock == null) {
+                val packageId: Int = apkmodule.androidManifestBlock.guessCurrentPackageId()
+                val tableBlock: TableBlock = apkmodule.tableBlock
+                packageBlock = tableBlock.pickOne(packageId)
+                if (packageBlock == null) {
+                    packageBlock = tableBlock.pickOne()
+                }
+            }
+
             return PackageInfo(
-                pack!!.applicationInfo.loadLabel(context.packageManager).toString(),
-                pack.packageName,
-                getVersion(pack),
+                packageBlock.getEntries(apkmodule.androidManifestBlock.applicationLabelReference, true).next().resValue.valueAsString,
+                apkmodule.packageName,
+                apkmodule.androidManifestBlock.versionName,
                 file.canonicalPath,
                 Type.APK,
-                isSystemPackage(pack),
+                false,
                 isExternalPackage
             )
         }
+
 
         /**
          * Get [PackageInfo] for a jar from the [file].
