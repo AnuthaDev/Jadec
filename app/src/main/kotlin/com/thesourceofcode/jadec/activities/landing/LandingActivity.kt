@@ -52,7 +52,9 @@ import com.thesourceofcode.jadec.utils.Ads
 import com.thesourceofcode.jadec.utils.secure.PurchaseUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 
@@ -115,15 +117,26 @@ class LandingActivity : BaseActivity() {
         filePickerDialog.setTitle(getString(R.string.selectFile))
 
         filePickerDialog.setDialogSelectionListener { files ->
-            if (files.isNotEmpty()) {
-                val selectedFile = File(files.first())
-                if (selectedFile.exists() && selectedFile.isFile) {
-                    PackageInfo.fromFile(context, selectedFile) ?. let {
-                        val i = Intent(context, DecompilerActivity::class.java)
-                        i.putExtra("packageInfo", it)
-                        startActivity(i)
+            val copyDialog = ProgressDialog(this)
+            copyDialog.setTitle("Please Wait!")
+            copyDialog.setMessage("Analyzing File")
+            copyDialog.setCancelable(false)
+            copyDialog.show()
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (files.isNotEmpty()) {
+                        val selectedFile = File(files.first())
+                        if (selectedFile.exists() && selectedFile.isFile) {
+                            PackageInfo.fromFile(context, selectedFile)?.let {
+                                val i = Intent(context, DecompilerActivity::class.java)
+                                i.putExtra("packageInfo", it)
+                                startActivity(i)
+                            }
+                        }
                     }
                 }
+                copyDialog.hide()
             }
         }
 
