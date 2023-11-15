@@ -26,6 +26,7 @@ package com.thesourceofcode.jadec.decompilers
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import androidx.work.Data
@@ -33,6 +34,7 @@ import androidx.work.ListenableWorker
 import com.reandroid.apk.APKLogger
 import com.reandroid.apk.ApkModule
 import com.reandroid.apk.ApkModuleXmlDecoder
+import com.reandroid.arsc.value.ResConfig
 import com.thesourceofcode.jadec.R
 import com.thesourceofcode.jadec.data.PackageInfo
 import com.thesourceofcode.jadec.data.SourceInfo
@@ -58,7 +60,7 @@ import java.io.OutputStreamWriter
 
 class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
-//    private lateinit var parsedInputApkFile: ApkFile
+    private lateinit var apkModule: ApkModule
     private val images = listOf("jpg", "png", "gif", "jpeg", "webp", "tiff", "bmp")
 
     /**
@@ -157,8 +159,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 //        }
 //        zipFile.close()
 
-        val apkmodule = ApkModule.loadApkFile(inputPackageFile)
-        val xmlDecoder = ApkModuleXmlDecoder(apkmodule)
+        val xmlDecoder = ApkModuleXmlDecoder(apkModule)
         xmlDecoder.setApkLogger(object:APKLogger{
             override fun logMessage(p0: String?) {
                 if (p0 != null) {
@@ -288,8 +289,23 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
      */
     @Throws(Exception::class)
     private fun saveIcon() {
-        val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)
-        val bitmap = getBitmapFromDrawable(packageInfo!!.applicationInfo.loadIcon(context.packageManager))
+        val packageInfo =
+            context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)
+        val drawable = packageInfo?.applicationInfo?.loadIcon(context.packageManager)
+
+        val bitmap = if (drawable != null) {
+            getBitmapFromDrawable(drawable)
+        } else {
+            val inp = apkModule.listResFiles(
+                apkModule.androidManifestBlock.iconResourceId,
+                ResConfig.parse(
+                    ResConfig.Density.HDPI.toString()
+                )
+            )[0].inputSource.openStream()
+
+            BitmapFactory.decodeStream(inp)
+
+        }
         val iconOutput = FileOutputStream(workingDirectory.resolve("icon.png"))
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, iconOutput)
         iconOutput.close()
@@ -320,7 +336,8 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
             .setPackageName(packageName)
 
         if (type == PackageInfo.Type.APK) {
-//            parsedInputApkFile = ApkFile(inputPackageFile)
+            apkModule = ApkModule.loadApkFile(inputPackageFile)
+
             try {
                 extractResourcesWithParser()
                 saveIcon()
