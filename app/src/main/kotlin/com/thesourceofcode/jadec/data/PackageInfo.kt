@@ -19,6 +19,7 @@
 package com.thesourceofcode.jadec.data
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -26,6 +27,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.reandroid.apk.ApkModule
 import com.reandroid.arsc.chunk.TableBlock
+import com.reandroid.arsc.value.ResConfig
 import com.thesourceofcode.jadec.utils.Identicon
 import com.thesourceofcode.jadec.utils.ktx.getVersion
 import com.thesourceofcode.jadec.utils.ktx.isSystemPackage
@@ -90,12 +92,36 @@ class PackageInfo() : Parcelable {
         parcel.writeInt(if (isExternalPackage) 1 else 0)
     }
 
-    fun loadIcon(context: Context): Drawable {
-        return when(type) {
-            Type.APK -> context.packageManager.getPackageArchiveInfo(filePath, 0)
-                ?.applicationInfo!!.loadIcon(context.packageManager)
+    fun loadIcon(context: Context): Drawable? {
+        when (type) {
+            Type.APK -> {
+                var retval = context.packageManager.getPackageArchiveInfo(filePath, 0)
+                    ?.applicationInfo?.loadIcon(context.packageManager)
+
+                if (retval == null){
+                    val apkModule = ApkModule.loadApkFile(File(filePath))
+
+                    val inp = apkModule.listResFiles(
+                        apkModule.androidManifestBlock.iconResourceId,
+                        ResConfig.parse(
+                            ResConfig.Density.HDPI.toString()
+                        )
+                    )[0].inputSource.openStream()
+
+
+                    retval =  BitmapDrawable(BitmapFactory.decodeStream(inp))
+
+                }
+
+                return retval
+
+            }
+
             Type.JAR, Type.DEX ->
-                BitmapDrawable(context.resources, Identicon.createFromObject(this.name + this.label))
+                return BitmapDrawable(
+                    context.resources,
+                    Identicon.createFromObject(this.name + this.label)
+                )
         }
     }
 
@@ -144,13 +170,22 @@ class PackageInfo() : Parcelable {
                 }
             }
 
+            var sysPack = false
+
+            if (!isExternalPackage){
+                val pack = context.packageManager.getPackageArchiveInfo(file.canonicalPath, 0)
+
+                if (pack != null){
+                    sysPack = isSystemPackage(pack)
+                }
+            }
             return PackageInfo(
                 packageBlock.getEntries(apkmodule.androidManifestBlock.applicationLabelReference, true).next().resValue.valueAsString,
                 apkmodule.packageName,
                 apkmodule.androidManifestBlock.versionName,
                 file.canonicalPath,
                 Type.APK,
-                false,
+                sysPack,
                 isExternalPackage
             )
         }
@@ -184,7 +219,7 @@ class PackageInfo() : Parcelable {
         fun fromFile(context: Context, file: File): PackageInfo? {
             return try {
                 when(file.extension) {
-                    "apk" -> fromApk(context, file)
+                    "apk" -> fromApk(context, file, true)
                     "jar" -> fromJar(file)
                     "dex", "odex" -> fromDex(file)
                     else -> null
