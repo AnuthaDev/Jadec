@@ -48,6 +48,7 @@ class Ads(val context: Context) {
     fun init() {
         MobileAds.initialize(context)
         val publisherIds = arrayOf(context.getString(R.string.admobPublisherId))
+       // ConsentInformation.getInstance(context).addTestDevice("D311BDDBEFA06A5400AB806FA411C38C")
         consentInformation.requestConsentInfoUpdate(
             publisherIds,
             object : ConsentInfoUpdateListener {

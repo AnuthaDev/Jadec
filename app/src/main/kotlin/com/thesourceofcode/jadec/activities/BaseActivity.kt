@@ -180,35 +180,35 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     private fun setupGoogleAds() {
         findViewById<AdView>(R.id.adView)?.let {it ->
             it.visibility = View.GONE
-//            if (!isPro()) {
-//                val extras = Bundle()
-//                val consentStatus = ConsentStatus.values()[userPreferences.consentStatus]
-//                if (consentStatus == ConsentStatus.NON_PERSONALIZED) {
-//                    extras.putString("npa", "1")
-//                }
-//
-//                val adRequest = AdRequest.Builder()
-//                    .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-//                    //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                   // .addTestDevice(getString(R.string.adUnitId))
-//                    .build()
-//
-//                it.adListener = object : AdListener() {
-//                    override fun onAdFailedToLoad(errorCode: LoadAdError) {
-//                        super.onAdFailedToLoad(errorCode)
-//                        it.visibility = View.GONE
-//                    }
-//
-//                    override fun onAdLoaded() {
-//                        super.onAdLoaded()
-//                        it.visibility = View.VISIBLE
-//                    }
-//                }
-//                it.loadAd(adRequest)
-//                if (!checkDataConnection(context)) {
-//                    it.visibility = View.GONE
-//                }
-//            }
+            if (!isPro()) {
+                val extras = Bundle()
+                val consentStatus = ConsentStatus.values()[userPreferences.consentStatus]
+                if (consentStatus == ConsentStatus.NON_PERSONALIZED) {
+                    extras.putString("npa", "1")
+                }
+
+                val adRequest = AdRequest.Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+                    //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                   // .addTestDevice(getString(R.string.adUnitId))
+                    .build()
+
+                it.adListener = object : AdListener() {
+                    override fun onAdFailedToLoad(errorCode: LoadAdError) {
+                        super.onAdFailedToLoad(errorCode)
+                        it.visibility = View.GONE
+                    }
+
+                    override fun onAdLoaded() {
+                        super.onAdLoaded()
+                        it.visibility = View.VISIBLE
+                    }
+                }
+                it.loadAd(adRequest)
+                if (!checkDataConnection(context)) {
+                    it.visibility = View.GONE
+                }
+            }
         }
     }
 
