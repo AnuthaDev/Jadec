@@ -6,7 +6,7 @@ An APK (android application), JAR & Dex decompiler for android.
 
 > The current GitHub master branch may be ahead of the Play Store version (and could be unstable/incomplete/buggy at some places)
 
-[<img src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" width="200" alt="Get Show Java on Google Play" />](https://play.google.com/store/apps/details?id=com.njlabs.showjava "Get Show Java on Google Play")
+[<img src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" width="200" alt="Get Show Java on Google Play" />](https://play.google.com/store/apps/details?id=com.thesourceofcode.jadec "Get Show Java on Google Play")
 ## About
 This is a Decompiler that extracts the source code of an Android application (including XML files and image assets), JAR Packages and dex files. Works directly from your android device.
 
