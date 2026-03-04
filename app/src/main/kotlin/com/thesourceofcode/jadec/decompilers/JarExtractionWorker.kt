@@ -138,7 +138,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             while (entries.hasMoreElements()) {
                 val zipEntry = entries.nextElement()
                 if (!zipEntry.isDirectory) {
-                    val extension = FilenameUtils.getExtension(zipEntry.name).toLowerCase()
+                    val extension = FilenameUtils.getExtension(zipEntry.name).lowercase()
                     if (arrayOf("dex", "odex").contains(extension)) {
                         addClassesFromDex(zipFile.getInputStream(zipEntry), extension)
                     }

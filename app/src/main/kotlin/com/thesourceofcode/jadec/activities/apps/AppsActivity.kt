@@ -121,7 +121,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         binding.appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
             Timber.d(selectedApp.name)
-            if (selectedApp.name.toLowerCase().contains(BuildConfig.APPLICATION_ID.toLowerCase())) {
+            if (selectedApp.name.lowercase().contains(BuildConfig.APPLICATION_ID.lowercase())) {
                 Toast.makeText(
                     applicationContext,
                     getString(R.string.checkoutSourceLink),
@@ -163,9 +163,9 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     }
 
     private fun searchApps(query: String?) {
-        val cleanedQuery = query?.trim()?.toLowerCase() ?: ""
+        val cleanedQuery = query?.trim()?.lowercase() ?: ""
         historyListAdapter.updateList(filteredApps.filter {
-            cleanedQuery == "" || it.label.toLowerCase().contains(cleanedQuery)
+            cleanedQuery == "" || it.label.lowercase().contains(cleanedQuery)
         })
     }
 

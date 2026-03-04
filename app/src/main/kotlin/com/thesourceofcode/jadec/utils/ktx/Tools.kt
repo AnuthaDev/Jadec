@@ -45,7 +45,7 @@ fun toSlug(input: String): String {
     val noWhiteSpace = WHITESPACE.matcher(input).replaceAll("-")
     val normalized = Normalizer.normalize(noWhiteSpace, Normalizer.Form.NFD)
     val slug = NON_LATIN.matcher(normalized).replaceAll("")
-    return slug.toLowerCase(Locale.ENGLISH)
+    return slug.lowercase(Locale.ENGLISH)
 }
 
 /**

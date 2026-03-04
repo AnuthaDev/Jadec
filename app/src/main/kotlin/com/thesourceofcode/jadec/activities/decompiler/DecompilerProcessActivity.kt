@@ -61,6 +61,7 @@ class DecompilerProcessActivity : BaseActivity() {
     private lateinit var binding: ActivityDecompilerProcessBinding
 
     private var hasCompleted = false
+    private val completionLock = Any()
     private var showMemoryUsage = false
     private var ranOutOfMemory = false
 
@@ -131,7 +132,9 @@ class DecompilerProcessActivity : BaseActivity() {
                         intent.putExtra("packageInfo", packageInfo)
                         intent.putExtra("decompiler", decompilerValues[decompilerIndex])
                         startActivity(intent)
-                        hasCompleted = true
+                        synchronized(completionLock) {
+                            hasCompleted = true
+                        }
                         finish()
                     } else {
                         reconcileDecompilerStatus()
@@ -141,7 +144,7 @@ class DecompilerProcessActivity : BaseActivity() {
     }
 
     private fun reconcileDecompilerStatus() {
-        synchronized(hasCompleted) {
+        synchronized(completionLock) {
             if (hasCompleted) {
                 return
             }

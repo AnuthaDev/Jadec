@@ -129,7 +129,7 @@ object Identicon {
         val md5 = getHexMd5(src)
         if (md5 != null) {
             val rgb = md5.substring(md5.length - 6, md5.length)
-            return Color.parseColor("#" + rgb.toUpperCase())
+            return Color.parseColor("#" + rgb.uppercase())
         }
 
         return Color.BLACK

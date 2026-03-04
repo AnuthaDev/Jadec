@@ -62,8 +62,8 @@ class NavigatorHandler(private var context: Context) {
                     files.add(FileItem(file, fileSize, lastModDate))
                 }
             }
-            directories.sortBy { it.name?.toLowerCase() }
-            files.sortBy { it.name?.toLowerCase() }
+            directories.sortBy { it.name?.lowercase() }
+            files.sortBy { it.name?.lowercase() }
             directories.addAll(files)
             directories
         }

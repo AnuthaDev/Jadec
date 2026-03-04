@@ -55,7 +55,7 @@ class AppsHandler(private var context: Context) {
                 )
             }
             installedApps.sortBy {
-                it.label.toLowerCase()
+                it.label.lowercase()
             }
             emitter.onNext(ProcessStatus(installedApps))
             emitter.onComplete()
