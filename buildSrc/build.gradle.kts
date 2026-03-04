@@ -19,5 +19,5 @@ dependencies {
     gradleApi()
 }
 dependencies {
-    implementation("org.ow2.asm:asm-util:9.2")
+    implementation("org.ow2.asm:asm-util:9.9.1")
 }
