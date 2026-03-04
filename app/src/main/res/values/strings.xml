@@ -90,7 +90,7 @@
     <string-array name="decompilers" translatable="false">
         <item><xliff:g>Procyon 0.6.0</xliff:g></item>
         <item><xliff:g>CFR 0.152</xliff:g></item>
-        <item><xliff:g>JaDX 1.4.7</xliff:g></item>
+        <item><xliff:g>JaDX 1.5.5</xliff:g></item>
         <item><xliff:g>FernFlower 630c1292</xliff:g></item>
     </string-array>
 

@@ -178,7 +178,7 @@ dependencies {
     // Multi-dex
     implementation "androidx.multidex:multidex:2.0.1"
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.4'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.1.5'
 
 
     // Kotlin Standard library
@@ -191,18 +191,18 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics-ktx"
     implementation "com.google.firebase:firebase-perf"
 
-    def billing_version = "6.0.1"
+    def billing_version = "6.2.1"
     implementation "com.android.billingclient:billing:$billing_version"
 
 
     // AndroidX support libraries
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "com.google.android.material:material:1.10.0"
+    implementation "com.google.android.material:material:1.12.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "androidx.recyclerview:recyclerview:1.3.2"
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.0'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
@@ -211,12 +211,12 @@ dependencies {
 //    implementation("com.google.guava:guava:32.1.3-android")
 
     // Android WorkManager
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation "androidx.work:work-runtime-ktx:2.9.1"
     
     // Dex2Jar & friends
-    implementation "org.ow2.asm:asm-tree:9.5"
-    implementation "org.ow2.asm:asm-util:9.5"
-    implementation "org.ow2.asm:asm-commons:9.5"
+    implementation "org.ow2.asm:asm-tree:9.9.1"
+    implementation "org.ow2.asm:asm-util:9.9.1"
+    implementation "org.ow2.asm:asm-commons:9.9.1"
     implementation 'org.smali:dexlib2:2.5.2'
     implementation files("libs/dex-ir-v2.4.jar")
     implementation files("libs/dex-reader-v2.4.jar")
@@ -226,7 +226,7 @@ dependencies {
 
     // CFR Decompiler
     implementation 'org.benf:cfr:0.152'
-    implementation 'com.google.android.gms:play-services-ads-lite:22.5.0'
+    implementation 'com.google.android.gms:play-services-ads-lite:22.6.0'
 
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
@@ -235,11 +235,13 @@ dependencies {
 //    jarJar files("libs/dx-1.16.jar")
 
     // JaDX & friends
-    implementation('io.github.skylot:jadx-core:1.4.7', {
-        exclude group: "com.google.protobuf", module: "protobuf-java"
-    })
+//    implementation('io.github.skylot:jadx-core:1.4.7', {
+//        exclude group: "com.google.protobuf", module: "protobuf-java"
+//    })
 
-    implementation "io.github.skylot:jadx-dex-input:1.4.7"
+    implementation "io.github.skylot:jadx-core:1.5.5"
+
+    implementation "io.github.skylot:jadx-dex-input:1.5.5"
     implementation files("libs/dx-1.16.jar")
     implementation files("libs/fernflower.jar")
 
@@ -274,14 +276,14 @@ dependencies {
 
     // RxAndroid & friends
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
 
     // Testing tools
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "junit:junit:4.13.2"
-    androidTestImplementation 'androidx.test:core:1.5.0'
-    androidTestImplementation 'androidx.test:rules:1.5.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test:core:1.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.google.code.findbugs", module: "jsr305"
@@ -289,8 +291,8 @@ dependencies {
 
     // Everybody else
     //noinspection GradleDependency
-    implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
-    implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation "commons-io:commons-io:2.21.0" // Fix to 2.5 for compatibility
+    implementation "com.jakewharton.timber:timber:5.0.1"
 //    implementation('org.solovyev.android:checkout:1.2.1', {
 //        exclude group: "com.google.code.findbugs", module: "jsr305"
 //    })
