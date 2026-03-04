@@ -89,7 +89,11 @@ class DecompilerProcessActivity : BaseActivity() {
         setupGears()
 
         val statusIntentFilter = IntentFilter(Constants.WORKER.ACTION.BROADCAST + packageInfo.name)
-        registerReceiver(progressReceiver, statusIntentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            registerReceiver(progressReceiver, statusIntentFilter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(progressReceiver, statusIntentFilter)
+        }
 
         binding.cancelButton.setOnClickListener {
             DecompilerWorker.cancel(context, packageInfo.name)

@@ -30,9 +30,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.ads.consent.ConsentInformation
 import com.google.ads.consent.ConsentStatus
 import com.google.ads.mediation.admob.AdMobAdapter
@@ -86,6 +89,10 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         if (userPreferences.customFont) {
             context.theme.applyStyle(R.style.LatoFontStyle, true)
         }
+
+        enableEdgeToEdge()
+
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
             if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 EasyPermissions.requestPermissions(
@@ -95,12 +102,27 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
                 init(savedInstanceState)
+                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    insets
+                }
             } else {
                 init(savedInstanceState)
+                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    insets
+                }
                 postPermissionsGrant()
             }
         } else {
             init(savedInstanceState)
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
             postPermissionsGrant()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

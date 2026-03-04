@@ -144,10 +144,10 @@ class PackageInfo() : Parcelable {
          */
         fun fromApkPackageInfo(context: Context, pack: android.content.pm.PackageInfo): PackageInfo {
             return PackageInfo(
-                pack.applicationInfo.loadLabel(context.packageManager).toString(),
+                pack.applicationInfo!!.loadLabel(context.packageManager).toString(),
                 pack.packageName,
                 getVersion(pack),
-                pack.applicationInfo.publicSourceDir,
+                pack.applicationInfo!!.publicSourceDir,
                 Type.APK,
                 isSystemPackage(pack)
             )

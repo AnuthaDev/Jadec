@@ -42,7 +42,7 @@ class AppsHandler(private var context: Context) {
             }
             packages.forEachIndexed { index, pack ->
                 val packageInfo = PackageInfo.fromApkPackageInfo(context, pack)
-                packageInfo.icon = pack.applicationInfo.loadIcon(context.packageManager)
+                packageInfo.icon = pack.applicationInfo!!.loadIcon(context.packageManager)
                 packageInfo.isSystemPackage = isSystemPackage(pack)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1

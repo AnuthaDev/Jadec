@@ -59,7 +59,7 @@ try {
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
     dexOptions {
         preDexLibraries = preDexEnabled && !isCi
     }
@@ -67,7 +67,7 @@ android {
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 33
+        targetSdkVersion 36
         multiDexEnabled true
         multiDexKeepProguard file("multidex-config.pro")
 

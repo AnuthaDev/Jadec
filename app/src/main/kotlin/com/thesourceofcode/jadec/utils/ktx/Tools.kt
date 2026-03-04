@@ -100,7 +100,7 @@ fun cleanMemory() {
  */
 fun getVersion(packageInfo: PackageInfo): String {
     return if (packageInfo.versionName != null)
-        packageInfo.versionName
+        packageInfo.versionName!!
     else
         getVersionCode(packageInfo).toString()
 }

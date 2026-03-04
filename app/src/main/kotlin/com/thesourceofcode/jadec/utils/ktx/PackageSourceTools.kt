@@ -32,7 +32,7 @@ val appStorage: File = File(Environment.getExternalStoragePublicDirectory(Enviro
  * Check if the given packageInfo points to a system application
  */
 fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
-    return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+    return pkgInfo.applicationInfo!!.flags and ApplicationInfo.FLAG_SYSTEM != 0
 }
 
 /**

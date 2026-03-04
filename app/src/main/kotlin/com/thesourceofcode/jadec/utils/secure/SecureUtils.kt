@@ -129,7 +129,7 @@ class SecureUtils(val context: Context) {
         val packageInfo = context.packageManager.getPackageInfo(
             context.packageName, PackageManager.GET_SIGNATURES
         )
-        packageInfo.signatures.forEach { signature ->
+        packageInfo.signatures!!.forEach { signature ->
             val signatureBytes = signature.toByteArray()
             val md = MessageDigest.getInstance("SHA")
             md.update(signatureBytes)
